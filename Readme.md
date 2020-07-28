@@ -1,7 +1,7 @@
 # Личный проект «Большое путешествие» [![Build status][travis-image]][travis-url]
 
 * Студент: [Алексей Зубрилин](https://up.htmlacademy.ru/ecmascript/12/user/16780).
-* Наставник: `Неизвестно`.
+* Наставник: [Алексей Балесный](https://htmlacademy.ru/profile/id221665).
 
 ---
 
