@@ -1,6 +1,6 @@
 "use strict";
 
-const TASK_COUNT = 3;
+const ROUTE_POINT_COUNT = 3;
 
 const createTripInfoTemplate = () => {
   return (
@@ -357,6 +357,6 @@ const eventsContainer = siteBodyElement.querySelector(`.trip-events__list`);
 
 render(eventsContainer, createEventEditTemplate(), `beforeend`);
 
-for (let i = 0; i < TASK_COUNT; i++) {
+for (let i = 0; i < ROUTE_POINT_COUNT; i++) {
   render(eventsContainer, createEventTemplate(), `beforeend`);
 }
