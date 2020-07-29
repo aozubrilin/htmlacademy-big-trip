@@ -1,5 +1,7 @@
 "use strict";
 
+const TASK_COUNT = 3;
+
 const createTripInfoTemplate = () => {
   return (
     `<section class="trip-main__trip-info  trip-info">
@@ -332,3 +334,29 @@ const createEventEditTemplate = () => {
 const render = (container, template, place) => {
   container.insertAdjacentHTML(place, template);
 };
+
+const siteBodyElement = document.querySelector(`.page-body`);
+const tripMainContainer = siteBodyElement.querySelector(`.trip-main`);
+
+render(tripMainContainer, createTripInfoTemplate(), `afterBegin`);
+
+const tripInfo = siteBodyElement.querySelector(`.trip-info`);
+const tripMenu = siteBodyElement.querySelector(`.trip-controls, h2`);
+
+render(tripInfo, createTripMainInfoTemplate(), `beforeend`);
+render(tripInfo, createTripCostInfoTemplate(), `beforeend`);
+render(tripMenu, createSiteMenuTemplate(), `beforeend`);
+render(tripMenu, createFilterTemplate(), `beforeend`);
+
+const triptripEventsContainer = siteBodyElement.querySelector(`.trip-events`);
+
+render(triptripEventsContainer, createSortTemplate(), `beforeend`);
+render(triptripEventsContainer, createDayTemplate(), `beforeend`);
+
+const eventsContainer = siteBodyElement.querySelector(`.trip-events__list`);
+
+render(eventsContainer, createEventEditTemplate(), `beforeend`);
+
+for (let i = 0; i < TASK_COUNT; i++) {
+  render(eventsContainer, createEventTemplate(), `beforeend`);
+}
