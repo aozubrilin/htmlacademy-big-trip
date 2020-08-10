@@ -71,7 +71,7 @@ const generateDataEnd = (date) => {
   return new Date(dataEnd);
 };
 
-export const generateTripPoint = () => {
+export const generateEvents = () => {
   const type = getRandomArrayItem(types);
   const dataStart = generateDataStart();
   const dataEnd = generateDataEnd(dataStart);
