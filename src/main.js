@@ -8,8 +8,12 @@ import {createDaysTemplate} from "./view/days.js";
 import {createDayItemTemplate} from "./view/day-item.js";
 import {createEventTemplate} from "./view/event.js";
 import {createEventEditTemplate} from "./view/edit-event.js";
+import {generateTripPoint} from "./mock/event.js";
 
-const ROUTE_POINT_COUNT = 3;
+
+const ROUTE_POINT_COUNT = 10;
+
+const tasks = new Array(ROUTE_POINT_COUNT).fill().map(generateTripPoint);
 
 const render = (container, template, place) => {
   container.insertAdjacentHTML(place, template);
