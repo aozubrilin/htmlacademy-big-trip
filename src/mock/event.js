@@ -1,57 +1,53 @@
 import {getRandomInteger, getRandomArrayItem} from "../utils.js";
-import {CITIES, MOCK_DESCRIPTION, EVENT_TYPES} from '../const.js';
+import {DESTINATIONS, MOCK_DESCRIPTION, EVENT_TYPES} from '../const.js';
 
 const MAX_PRICE = 200;
-const RANDOM_TITLE = `Random text №`;
+const OFFERS = [
+  {
+    type: `order`,
+    title: `Order Uber`,
+    price: 20
+  },
+  {
+    type: `luggage`,
+    title: `Add luggage`,
+    price: 50
+  },
+  {
+    type: `meal`,
+    title: `Add meal`,
+    price: 15
+  },
+  {
+    type: `seats`,
+    title: `Choose seats`,
+    price: 5
+  },
+  {
+    type: `train`,
+    title: `Travel by train`,
+    price: 40
+  }
+];
 
 const {transfers, actions} = EVENT_TYPES;
 const types = [...actions, ...transfers];
 
-const generateRandomOffer = () => {
-  const countOffers = getRandomInteger(1, 5);
-  const randomOffers = new Array(countOffers).fill().map(() => ({title: RANDOM_TITLE + getRandomInteger(0, 100), price: getRandomInteger(0, MAX_PRICE)}));
-  const isOffer = Boolean(getRandomInteger(0, 1));
-
-  return (!isOffer) ? null : randomOffers;
-};
-
-const generateAdditionalOptions = () => {
-  const additionalOptions = [];
-
-  for (let i = 0; i < types.length; i++) {
-    const offers = generateRandomOffer();
-    additionalOptions.push({type: `${types[i]}`, offers});
-  }
-
-  return additionalOptions;
-};
-
-const generateOfferForType = (typeItem) => {
-  const additionalOption = generateAdditionalOptions();
-  let OffersForType = [];
-  for (const key in additionalOption) {
-    if (additionalOption[key].type === typeItem) {
-      OffersForType = additionalOption[key];
-    }
-  }
-
-  return OffersForType.offers;
+const generateOffers = () => {
+  const countOffers = getRandomInteger(0, 5);
+  return new Array(countOffers).fill().map(() => OFFERS[getRandomInteger(0, OFFERS.length - 1)]);
 };
 
 const generateDescription = () => {
   const splitTexts = MOCK_DESCRIPTION.split(`. `);
-  const counеSentence = getRandomInteger(1, 5);
-  return new Array(counеSentence).fill().map(() => getRandomArrayItem(splitTexts)).join(`. `);
+  const countSentence = getRandomInteger(1, 5);
+  return new Array(countSentence).fill().map(() => getRandomArrayItem(splitTexts)).join(`. `);
 };
 
 const generatePhoto = () => {
-  const listPhotos = [];
   const countFoto = getRandomInteger(1, 5);
-  for (let i = 0; i < countFoto; i++) {
-    listPhotos.push(`<img class="event__photo" src=http://picsum.photos/248/152?r=${Math.random()}" alt="Event photo"></img>`);
-  }
 
-  return listPhotos.join(`\n`);
+  return new Array(countFoto).fill().map(() =>`<img class="event__photo" src=http://picsum.photos/248/152?r=${Math.random()}" alt="Event photo"></img>`).join(``);
 };
 
 const generateDataStart = () => {
@@ -78,9 +74,9 @@ export const generateEvents = () => {
 
   return {
     type,
-    city: getRandomArrayItem(CITIES),
+    destination: getRandomArrayItem(DESTINATIONS),
     price: getRandomInteger(10, MAX_PRICE),
-    offer: generateOfferForType(type),
+    offers: generateOffers(),
     destinationInfo: {
       description: generateDescription(),
       photo: generatePhoto()

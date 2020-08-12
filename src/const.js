@@ -1,4 +1,4 @@
-export const CITIES = [
+export const DESTINATIONS = [
   `Amsterdam`,
   `Geneva`,
   `Chamonix`,

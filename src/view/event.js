@@ -10,10 +10,10 @@ const createOfferTemplate = (offer) => {
 };
 
 export const createEventTemplate = (event) => {
-  const {type, city, price, offer, dateStart, dateEnd} = event;
+  const {type, destination, price, offers, dateStart, dateEnd} = event;
 
   const eventTitleType = createEventTitleType(type);
-  const offerTemplate = createOfferTemplate(offer);
+  const offerTemplate = createOfferTemplate(offers);
   const startDateTime = getDateTime(dateStart);
   const endDateTime = getDateTime(dateEnd);
   const duration = getDuration(dateStart, dateEnd);
@@ -24,7 +24,7 @@ export const createEventTemplate = (event) => {
       <div class="event__type">
         <img class="event__type-icon" width="42" height="42" src="img/icons/${type}.png" alt="Event ${type} icon">
       </div>
-      <h3 class="event__title">${eventTitleType} ${city}</h3>
+      <h3 class="event__title">${eventTitleType} ${destination}</h3>
 
       <div class="event__schedule">
         <p class="event__time">
