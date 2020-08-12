@@ -1,4 +1,4 @@
-import {SECONDS_IN_DAY, HOURS_IN_DAY, MINUTES_IN_HOUR} from './const.js';
+import {SECONDS_IN_DAY, HOURS_IN_DAY, MINUTES_IN_HOUR, EVENT_TYPES} from './const.js';
 
 const addZero = (numb) => {
   return numb < 10 ? `0` + numb : numb;
@@ -15,6 +15,10 @@ export const getRandomArrayItem = (arr) => {
   const randomIndex = getRandomInteger(0, arr.length - 1);
 
   return arr[randomIndex];
+};
+
+export const createEventTitleType = (type) => {
+  return EVENT_TYPES.actions.includes(type) ? `${type} in` : `${type} to`;
 };
 
 export const getDateTime = (date) => {
@@ -38,4 +42,11 @@ export const getDuration = (dateStart, dateEnd) => {
 
   return stringDurationDays + stringDurationHours + stringDurationMinutes;
 };
+
+export const getDateThroughSlahs = (date) => {
+  const optionsDate = {day: `numeric`, month: `2-digit`, year: `2-digit`};
+  const optionsTime = {hour12: false, hour: `2-digit`, minute: `numeric`};
+  return date.toLocaleString(`en-GB`, optionsDate) + ` ` + date.toLocaleString(`en-US`, optionsTime);
+};
+
 

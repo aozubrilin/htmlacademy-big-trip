@@ -1,5 +1,5 @@
-import {EVENT_TYPES} from '../const.js';
-import {getDateTime, getDuration} from "../utils.js";
+import {getDateTime, getDuration, createEventTitleType} from "../utils.js";
+
 const createOfferTemplate = (offer) => {
 
   return offer !== null ? offer.slice(0, 3).map((offerItem) =>
@@ -12,7 +12,7 @@ const createOfferTemplate = (offer) => {
 export const createEventTemplate = (event) => {
   const {type, city, price, offer, dateStart, dateEnd} = event;
 
-  const eventTitleType = EVENT_TYPES.actions.includes(type) ? `${type} in` : `${type} to`;
+  const eventTitleType = createEventTitleType(type);
   const offerTemplate = createOfferTemplate(offer);
   const startDateTime = getDateTime(dateStart);
   const endDateTime = getDateTime(dateEnd);
