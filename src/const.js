@@ -13,3 +13,7 @@ export const EVENT_TYPES = {
   actions: [`Check-in`, `Sightseeing`, `Restaurant`],
   transfers: [`Taxi`, `Bus`, `Train`, `Ship`, `Transport`, `Drive`, `Flight`]
 };
+
+export const SECONDS_IN_DAY = 864e5;
+export const HOURS_IN_DAY = 24;
+export const MINUTES_IN_HOUR = 60;

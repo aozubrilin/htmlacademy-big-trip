@@ -2,15 +2,14 @@ import {getRandomInteger, getRandomArrayItem} from "../utils.js";
 import {CITIES, MOCK_DESCRIPTION, EVENT_TYPES} from '../const.js';
 
 const MAX_PRICE = 200;
-const RANDOM_TITLE = `Completely random text №`;
+const RANDOM_TITLE = `Random text №`;
 
 const {transfers, actions} = EVENT_TYPES;
 const types = [...actions, ...transfers];
 
 const generateRandomOffer = () => {
   const countOffers = getRandomInteger(1, 5);
-  const randomPrice = getRandomInteger(0, MAX_PRICE);
-  const randomOffers = new Array(countOffers).fill().map(() => ({title: RANDOM_TITLE + getRandomInteger(0, 100), price: randomPrice}));
+  const randomOffers = new Array(countOffers).fill().map(() => ({title: RANDOM_TITLE + getRandomInteger(0, 100), price: getRandomInteger(0, MAX_PRICE)}));
   const isOffer = Boolean(getRandomInteger(0, 1));
 
   return (!isOffer) ? null : randomOffers;
@@ -18,8 +17,9 @@ const generateRandomOffer = () => {
 
 const generateAdditionalOptions = () => {
   const additionalOptions = [];
-  const offers = generateRandomOffer();
+
   for (let i = 0; i < types.length; i++) {
+    const offers = generateRandomOffer();
     additionalOptions.push({type: `${types[i]}`, offers});
   }
 
@@ -66,25 +66,26 @@ const generateDataStart = () => {
 
 const generateDataEnd = (date) => {
   const dataStart = new Date(date);
-  const dataEnd = new Date(dataStart.setHours(getRandomInteger(dataStart.getHours() + 1, 23), getRandomInteger(0, 59)));
+  const dataEnd = new Date(dataStart.setHours(getRandomInteger(dataStart.getHours() + 1, 24), getRandomInteger(0, 59)));
 
   return new Date(dataEnd);
 };
 
 export const generateEvents = () => {
   const type = getRandomArrayItem(types);
-  const dataStart = generateDataStart();
-  const dataEnd = generateDataEnd(dataStart);
+  const dateStart = generateDataStart();
+  const dateEnd = generateDataEnd(dateStart);
 
   return {
     type,
     city: getRandomArrayItem(CITIES),
+    price: getRandomInteger(10, MAX_PRICE),
     offer: generateOfferForType(type),
     destinationInfo: {
       description: generateDescription(),
       photo: generatePhoto()
     },
-    dataStart,
-    dataEnd
+    dateStart,
+    dateEnd
   };
 };
