@@ -47,7 +47,7 @@ const generateDescription = () => {
 const generatePhoto = () => {
   const countFoto = getRandomInteger(1, 5);
 
-  return new Array(countFoto).fill().map(() =>`<img class="event__photo" src="http://picsum.photos/248/152?r=${Math.random()}" alt="Event photo"></img>`).join(``);
+  return new Array(countFoto).fill().map(() =>`<img class="event__photo" src="http://picsum.photos/248/152?r=${Math.random()}" alt="Event photo"></img>`).join(`\n`);
 };
 
 const generateDataStart = () => {

@@ -5,15 +5,13 @@ import {createSiteMenuTemplate} from "./view/site-menu.js";
 import {createFilterTemplate} from "./view/filter.js";
 import {createSortTemplate} from "./view/sort.js";
 import {createDaysTemplate} from "./view/days.js";
-import {createDayItemTemplate} from "./view/day-item.js";
-import {createEventTemplate} from "./view/event.js";
-import {createEventEditTemplate} from "./view/edit-event.js";
 import {generateEvents} from "./mock/event.js";
 
 
 const ROUTE_POINT_COUNT = 20;
 
 const events = new Array(ROUTE_POINT_COUNT).fill().map(generateEvents);
+
 console.log(events);
 
 const render = (container, template, place) => {
@@ -34,18 +32,10 @@ render(tripMenu, createSiteMenuTemplate(), `beforeend`);
 render(tripMenu, createFilterTemplate(), `beforeend`);
 
 const tripEventsContainer = siteBodyElement.querySelector(`.trip-events`);
+const sortedEvents = events.slice(0).sort((current, next) => current.dateStart - next.dateStart);
+const days = new Set(sortedEvents.map((it) => it.dateStart.toLocaleDateString()));
 
 render(tripEventsContainer, createSortTemplate(), `beforeend`);
-render(tripEventsContainer, createDaysTemplate(), `beforeend`);
+render(tripEventsContainer, createDaysTemplate(days, sortedEvents), `beforeend`);
 
-const tripDaysContainer = siteBodyElement.querySelector(`.trip-days`);
 
-render(tripDaysContainer, createDayItemTemplate(), `beforeend`);
-
-const eventsContainer = siteBodyElement.querySelector(`.trip-events__list`);
-
-render(eventsContainer, createEventEditTemplate(events[0]), `beforeend`);
-
-for (let i = 1; i < ROUTE_POINT_COUNT; i++) {
-  render(eventsContainer, createEventTemplate(events[i]), `beforeend`);
-}

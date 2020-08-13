@@ -21,14 +21,8 @@ export const createEventTitleType = (type) => {
   return EVENT_TYPES.actions.includes(type) ? `${type} in` : `${type} to`;
 };
 
-export const getDateTime = (date) => {
-  const year = date.getFullYear();
-  const month = addZero(date.getMonth());
-  const dateDay = addZero(date.getDate());
-  const hour = addZero(date.getHours());
-  const minute = addZero(date.getMinutes());
-
-  return year + `-` + month + `-` + dateDay + `T` + hour + `:` + minute;
+export const getISODateTime = (date) => {
+  return date.toISOString().slice(0, 16);
 };
 
 export const getDuration = (dateStart, dateEnd) => {
@@ -41,6 +35,11 @@ export const getDuration = (dateStart, dateEnd) => {
   const stringDurationMinutes = durationMinutes !== 0 ? addZero(durationMinutes) + `M` : ``;
 
   return stringDurationDays + stringDurationHours + stringDurationMinutes;
+};
+
+
+export const getShortDate = (date) => {
+  return date.toLocaleDateString(`en-US`, {month: `short`, day: `2-digit`});
 };
 
 export const getDateThroughSlahs = (date) => {

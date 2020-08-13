@@ -1,4 +1,4 @@
-import {getDateTime, getDuration, createEventTitleType} from "../utils.js";
+import {getISODateTime, getDuration, createEventTitleType} from "../utils.js";
 
 const createOfferTemplate = (offer) => {
 
@@ -14,8 +14,8 @@ export const createEventTemplate = (event) => {
 
   const eventTitleType = createEventTitleType(type);
   const offerTemplate = createOfferTemplate(offers);
-  const startDateTime = getDateTime(dateStart);
-  const endDateTime = getDateTime(dateEnd);
+  const startDateTime = getISODateTime(dateStart);
+  const endDateTime = getISODateTime(dateEnd);
   const duration = getDuration(dateStart, dateEnd);
 
   return (
