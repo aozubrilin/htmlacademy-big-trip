@@ -46,7 +46,7 @@ export const getDuration = (dateStart, dateEnd) => {
 export const getDateThroughSlahs = (date) => {
   const optionsDate = {day: `numeric`, month: `2-digit`, year: `2-digit`};
   const optionsTime = {hour12: false, hour: `2-digit`, minute: `numeric`};
-  return date.toLocaleString(`en-GB`, optionsDate) + ` ` + date.toLocaleString(`en-US`, optionsTime);
+  return date.toLocaleString(`en-GB`, optionsDate) + ` ` + date.toLocaleString(`ru-GB`, optionsTime);
 };
 
 

@@ -44,8 +44,8 @@ render(tripDaysContainer, createDayItemTemplate(), `beforeend`);
 
 const eventsContainer = siteBodyElement.querySelector(`.trip-events__list`);
 
-render(eventsContainer, createEventEditTemplate(), `beforeend`);
+render(eventsContainer, createEventEditTemplate(events[0]), `beforeend`);
 
-for (let i = 0; i < ROUTE_POINT_COUNT; i++) {
+for (let i = 1; i < ROUTE_POINT_COUNT; i++) {
   render(eventsContainer, createEventTemplate(events[i]), `beforeend`);
 }
