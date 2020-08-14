@@ -51,7 +51,7 @@ const generatePhoto = () => {
   return new Array(countFoto).fill().map(() =>`<img class="event__photo" src="http://picsum.photos/248/152?r=${Math.random()}" alt="Event photo"></img>`).join(`\n`);
 };
 
-const generateDataStart = () => {
+const generateDateStart = () => {
   const maxDaysGap = 2;
   const daysGap = getRandomInteger(-maxDaysGap, maxDaysGap);
   const currentDate = new Date();
@@ -61,17 +61,17 @@ const generateDataStart = () => {
   return new Date(currentDate);
 };
 
-const generateDataEnd = (date) => {
-  const dataStart = new Date(date);
-  const dataEnd = new Date(dataStart.setHours(getRandomInteger(dataStart.getHours() + 1, 24), getRandomInteger(0, 59)));
+const generateDateEnd = (date) => {
+  const dateStart = new Date(date);
+  const dateEnd = new Date(dateStart.setHours(getRandomInteger(dateStart.getHours() + 1, 24), getRandomInteger(0, 59)));
 
-  return new Date(dataEnd);
+  return new Date(dateEnd);
 };
 
 export const generateEvents = () => {
   const type = getRandomArrayItem(types);
-  const dateStart = generateDataStart();
-  const dateEnd = generateDataEnd(dateStart);
+  const dateStart = generateDateStart();
+  const dateEnd = generateDateEnd(dateStart);
 
   return {
     type,
