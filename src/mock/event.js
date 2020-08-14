@@ -2,6 +2,7 @@ import {getRandomInteger, getRandomArrayItem} from "../utils.js";
 import {DESTINATIONS, MOCK_DESCRIPTION, EVENT_TYPES} from '../const.js';
 
 const MAX_PRICE = 200;
+const MIN_PRICE = 10;
 const OFFERS = [
   {
     type: `order`,
@@ -39,9 +40,9 @@ const generateOffers = () => {
 };
 
 const generateDescription = () => {
-  const splitTexts = MOCK_DESCRIPTION.split(`. `);
+  const splitTexts = MOCK_DESCRIPTION.split(`\n`);
   const countSentence = getRandomInteger(1, 5);
-  return new Array(countSentence).fill().map(() => getRandomArrayItem(splitTexts)).join(`. `);
+  return new Array(countSentence).fill().map(() => getRandomArrayItem(splitTexts)).join(``);
 };
 
 const generatePhoto = () => {
@@ -75,7 +76,7 @@ export const generateEvents = () => {
   return {
     type,
     destination: getRandomArrayItem(DESTINATIONS),
-    price: getRandomInteger(10, MAX_PRICE),
+    price: getRandomInteger(MIN_PRICE, MAX_PRICE),
     offers: generateOffers(),
     destinationInfo: {
       description: generateDescription(),

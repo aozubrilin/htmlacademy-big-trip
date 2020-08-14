@@ -20,15 +20,15 @@ const createDestinationListTemplate = (destinations) => {
 
 const createOffersTemplate = (Offers) => {
   return Offers.length !== 0 ? `<section class="event__section  event__section--offers">
-  <h3 class="event__section-title  event__section-title--offers">Offers</h3>
-   ${Offers.map((item) => `<div class="event__available-offers">
+   <h3 class="event__section-title  event__section-title--offers">Offers</h3>
+    ${Offers.map((item) => `<div class="event__available-offers">
     <div class="event__offer-selector">
     <input class="event__offer-checkbox  visually-hidden" id="event-offer-${item.type}-1" type="checkbox" name="event-offer-${item.type}" checked>
     <label class="event__offer-label" for="event-offer-${item.type}-1">
     <span class="event__offer-title">${item.title}</span>
     &plus;
     &euro;&nbsp;<span class="event__offer-price">${item.price}</span>
-  </label></div>`).join(``)} </section>` : ``;
+    </label></div>`).join(``)} </section>` : ``;
 };
 
 const createDestinationInfoTemplate = (destinationInfo) => {
@@ -43,7 +43,6 @@ const createDestinationInfoTemplate = (destinationInfo) => {
   </div>
 </section>`;
 };
-
 
 export const createEventEditTemplate = (event = {}) => {
   const {
