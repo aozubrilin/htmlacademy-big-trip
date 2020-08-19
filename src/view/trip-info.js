@@ -1,9 +1,14 @@
 import {getShortDate} from "../utils.js";
 
-const getDestinationTemplate = (events) => {
+const getDestinationTemplate = (events, eventsByDateEnd) => {
+  const destinations = events.map((it) => it.destination);
+  const uniqDestinations = Array.from(new Set(destinations));
+  if (destinations.length > 3 && uniqDestinations.length !== 1) {
+    return `${events[0].destination} &mdash; ... &mdash; ${eventsByDateEnd[events.length - 1].destination}`;
+  }
 
-  if (events.length > 3) {
-    return `${events[0].destination} &mdash; ... &mdash; ${events[events.length - 1].destination}`;
+  if (uniqDestinations.length === 1) {
+    return uniqDestinations;
   }
 
   return events.map((event, index) => {
@@ -14,21 +19,21 @@ const getDestinationTemplate = (events) => {
   }).join(``);
 };
 
-const getDateTemplate = (events) => {
+const getDateTemplate = (events, eventsByDateEnd) => {
   const dateStart = getShortDate(events[0].dateStart);
-  const dateEnd = getShortDate(events[events.length - 1].dateEnd);
+  const dateEnd = getShortDate(eventsByDateEnd[events.length - 1].dateEnd);
 
   return `<p class="trip-info__dates">${dateStart}&nbsp;&mdash;&nbsp;${dateEnd}</p>`;
 };
 
 const getCost = (events) => events.reduce((eventsPrice, event) =>
-  eventsPrice + event.price + event.offers.reduce((offersPrice, offer) =>
-    offersPrice + offer.price, 0), 0);
+  eventsPrice + event.price + (event.offers !== null ? (event.offers.reduce((offersPrice, offer) =>
+    offersPrice + offer.price, 0)) : 0), 0);
 
 export const createTripInfoTemplate = (events) => {
-
-  const destinationTemplate = getDestinationTemplate(events);
-  const dateTemplate = getDateTemplate(events);
+  const eventsByDateEnd = events.slice(0).sort((current, next) => current.dateEnd - next.dateEnd);
+  const destinationTemplate = getDestinationTemplate(events, eventsByDateEnd);
+  const dateTemplate = getDateTemplate(events, eventsByDateEnd);
   const cost = getCost(events);
 
   return (

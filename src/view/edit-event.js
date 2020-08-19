@@ -1,16 +1,18 @@
-import {EVENT_TYPES, DESTINATIONS} from '../const.js';
+import {EVENT_TYPES, Destination} from '../const.js';
+import {OFFERS} from "../mock/offers.js";
 import {getDateThroughSlahs, createEventTitleType} from "../utils.js";
 
 const createTypeListTemplate = (currentType) => {
 
-  return Object.entries(EVENT_TYPES).map(([types, typeItems]) => `<fieldset class="event__type-group"><legend class="visually-hidden">${types}</legend>`
+  return Object.entries(EVENT_TYPES).map(([types, typeItems]) =>
+    `<fieldset class="event__type-group"><legend class="visually-hidden">${types}</legend>`
     + typeItems.map((item) => `<div class="event__type-${item.toLowerCase()}">
-  <input id="event-type-${item.toLowerCase()}-1"
-  class="event__type-input  visually-hidden"
-  type="radio" name="event-type"
-  value="${item.toLowerCase()}"
-  ${currentType === item ? `checked` : ``}>
-  <label class="event__type-label event__type-label--${item.toLowerCase()}" for="event-type-item-1">${item}</label></div>`).join(``)).join(`</fieldset>`);
+    <input id="event-type-${item.toLowerCase()}-1"
+    class="event__type-input  visually-hidden"a
+    type="radio" name="event-type"
+    value="${item.toLowerCase()}"
+    ${currentType === item ? `checked` : ``}>
+    <label class="event__type-label event__type-label--${item.toLowerCase()}" for="event-type-item-1">${item}</label></div>`).join(``)).join(`</fieldset>`);
 };
 
 const createDestinationListTemplate = (destinations) => {
@@ -18,27 +20,33 @@ const createDestinationListTemplate = (destinations) => {
   return destinations.map((item) => `<option value="${item}"></option>`).join(``);
 };
 
-const createOffersTemplate = (Offers) => {
-  return Offers.length !== 0 ? `<section class="event__section  event__section--offers">
-   <h3 class="event__section-title  event__section-title--offers">Offers</h3>
-    ${Offers.map((item) => `<div class="event__available-offers">
-    <div class="event__offer-selector">
-    <input class="event__offer-checkbox  visually-hidden" id="event-offer-${item.type}-1" type="checkbox" name="event-offer-${item.type}" checked>
-    <label class="event__offer-label" for="event-offer-${item.type}-1">
-    <span class="event__offer-title">${item.title}</span>
-    &plus;
-    &euro;&nbsp;<span class="event__offer-price">${item.price}</span>
-    </label></div>`).join(``)} </section>` : ``;
+const createOffersTemplate = (eventOffers, types) => {
+  return OFFERS.filter((offer) => offer.type === types).map((item) => eventOffers !== null ?
+    `<section class="event__section  event__section--offers">
+      <h3 class="event__section-title  event__section-title--offers">Offers</h3>
+      <div class="event__available-offers">
+
+    ${item.offers.map((offer) => `<div class="event__offer-selector">
+          <input class="event__offer-checkbox  visually-hidden" id="event-offer-${offer.lable}-1"
+           type="checkbox" name="event-offer-${offer.lable}" ${ eventOffers.includes(offer) ? `checked` : ``}>
+          <label class="event__offer-label" for="event-offer-${offer.lable}-1">
+          <span class="event__offer-title">${offer.title}</span>
+          &plus;
+          &euro;&nbsp;<span class="event__offer-price">${offer.price}</span>
+          </label></div>`).join(`\n`)}</div>
+       </section>` : ``
+  );
 };
 
-const createDestinationInfoTemplate = (destinationInfo) => {
 
+const createDestinationInfoTemplate = (destinationInfo) => {
+  const photoTemlate = destinationInfo.photo.map((photo) =>`<img class="event__photo" ${photo} alt="Event photo"></img>`).join(`\n`);
   return `<section class="event__section  event__section--destination">
   <h3 class="event__section-title  event__section-title--destination">Destination</h3>
   <p class="event__destination-description">${destinationInfo.description}</p>
   <div class="event__photos-container">
     <div class="event__photos-tape">
-    ${destinationInfo.photo}
+    ${photoTemlate}
     </div>
   </div>
 </section>`;
@@ -58,8 +66,8 @@ export const createEventEditTemplate = (event = {}) => {
 
   const typeListTemplate = createTypeListTemplate(type);
   const eventTitleType = createEventTitleType(type);
-  const destinationListTemplate = createDestinationListTemplate(DESTINATIONS);
-  const OffersTemplate = createOffersTemplate(offers);
+  const destinationListTemplate = createDestinationListTemplate(Destination.CITIES);
+  const OffersTemplate = createOffersTemplate(offers, type);
   const destinationInfoTemplate = createDestinationInfoTemplate(destinationInfo);
   const startTime = getDateThroughSlahs(dateStart);
   const endTime = getDateThroughSlahs(dateEnd);

@@ -1,14 +1,10 @@
 const createFiterItemsTemlate = (filter) => {
-  let filterItems = ``;
-  for (const item of filter) {
-    filterItems += `<div class="trip-filters__filter">
-                  <input id="filter-everything" class="trip-filters__filter-input  visually-hidden"
-                  type="radio" name="trip-filter" value="${item.name.toLowerCase()}" ${item.isChecked ? `checked` : ``}>
-                  <label class="trip-filters__filter-label" for="filter-${item.name.toLowerCase()}">${item.name}</label>
-                  </div>`;
-  }
 
-  return filterItems;
+  return filter.map((it) =>`<div class="trip-filters__filter">
+                          <input id="filter-${it.name.toLowerCase()}" class="trip-filters__filter-input  visually-hidden"
+                          type="radio" name="trip-filter" value="${it.name.toLowerCase()}" ${it.isChecked ? `checked` : ``}>
+                          <label class="trip-filters__filter-label" for="filter-${it.name.toLowerCase()}">${it.name}</label>
+                          </div>`).join(``);
 };
 
 export const createFilterTemplate = () => {

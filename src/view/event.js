@@ -6,7 +6,7 @@ const createOfferTemplate = (offer) => {
     `<li class="event__offer">
         <span class="event__offer-title">${offerItem.title}</span>
         &plus;&nbsp;&euro;&nbsp;<span class="event__offer-price">${offerItem.price}</span>
-        </li>`).join(``) : ``;
+     </li>`).join(``) : ``;
 };
 
 export const createEventTemplate = (event) => {
@@ -41,7 +41,7 @@ export const createEventTemplate = (event) => {
 
       <h4 class="visually-hidden">Offers:</h4>
       <ul class="event__selected-offers">
-      ${offerTemplate}
+         ${offerTemplate}
       </ul>
 
       <button class="event__rollup-btn" type="button">

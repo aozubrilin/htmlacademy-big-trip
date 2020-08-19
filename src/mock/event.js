@@ -1,54 +1,45 @@
 import {getRandomInteger, getRandomArrayItem} from "../utils.js";
-import {DESTINATIONS, MOCK_DESCRIPTION, EVENT_TYPES} from '../const.js';
+import {Destination, EVENT_TYPES} from '../const.js';
+import {OFFERS} from './offers.js';
+import {generateDestinations} from './destination.js';
 
 const MAX_PRICE = 200;
 const MIN_PRICE = 10;
-const OFFERS = [
-  {
-    type: `order`,
-    title: `Order Uber`,
-    price: 20
-  },
-  {
-    type: `luggage`,
-    title: `Add luggage`,
-    price: 50
-  },
-  {
-    type: `meal`,
-    title: `Add meal`,
-    price: 15
-  },
-  {
-    type: `seats`,
-    title: `Choose seats`,
-    price: 5
-  },
-  {
-    type: `train`,
-    title: `Travel by train`,
-    price: 40
-  }
-];
 
 const {transfers, actions} = EVENT_TYPES;
 const types = [...actions, ...transfers];
 
-const generateOffers = () => {
-  const countOffers = getRandomInteger(0, 5);
-  return new Array(countOffers).fill().map(() => OFFERS[getRandomInteger(0, OFFERS.length - 1)]);
+const destinations = generateDestinations();
+
+
+const getDescription = (destination) => {
+  return destinations.filter((it) => it.city === destination).map((it) => it.destinationInfo.description).join(``);
 };
 
-const generateDescription = () => {
-  const splitTexts = MOCK_DESCRIPTION.split(`\n`);
-  const countSentence = getRandomInteger(1, 5);
-  return new Array(countSentence).fill().map(() => getRandomArrayItem(splitTexts)).join(``);
+const getPhoto = (destination) => {
+  let photos = [];
+  destinations.map((it)=>{
+    if (it.city === destination) {
+      photos = it.destinationInfo.photo;
+    }
+  });
+
+  return photos;
 };
 
-const generatePhoto = () => {
-  const countFoto = getRandomInteger(1, 5);
+const generateOffers = (type) => {
+  let result = [];
+  OFFERS.map((it) => {
+    if (it.type === type) {
+      it.offers.forEach((offer) => {
+        if (getRandomInteger(0, 1) > 0.5) {
+          result.push(offer);
+        }
+      });
+    }
+  });
 
-  return new Array(countFoto).fill().map(() =>`<img class="event__photo" src="http://picsum.photos/248/152?r=${Math.random()}" alt="Event photo"></img>`).join(`\n`);
+  return result.length ? result : null;
 };
 
 const generateDateStart = () => {
@@ -72,15 +63,16 @@ export const generateEvents = () => {
   const type = getRandomArrayItem(types);
   const dateStart = generateDateStart();
   const dateEnd = generateDateEnd(dateStart);
+  const destination = getRandomArrayItem(Destination.CITIES);
 
   return {
     type,
-    destination: getRandomArrayItem(DESTINATIONS),
+    destination,
     price: getRandomInteger(MIN_PRICE, MAX_PRICE),
-    offers: generateOffers(),
+    offers: generateOffers(type),
     destinationInfo: {
-      description: generateDescription(),
-      photo: generatePhoto()
+      description: getDescription(destination),
+      photo: getPhoto(destination)
     },
     dateStart,
     dateEnd,

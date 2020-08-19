@@ -1,8 +1,4 @@
-import {SECONDS_IN_DAY, HOURS_IN_DAY, MINUTES_IN_HOUR, EVENT_TYPES} from './const.js';
-
-const addZero = (numb) => {
-  return numb < 10 ? `0` + numb : numb;
-};
+import {TimeUnits, EVENT_TYPES} from './const.js';
 
 export const getRandomInteger = (min = 0, max = 1) => {
   const lower = Math.ceil(Math.min(min, max));
@@ -27,13 +23,12 @@ export const getISODateTime = (date) => {
 
 export const getDuration = (dateStart, dateEnd) => {
   const durationInMs = (dateEnd - dateStart);
-  const durationDays = Math.floor(durationInMs / SECONDS_IN_DAY);
-  const durationHours = Math.floor(((durationInMs / SECONDS_IN_DAY) - durationDays) * HOURS_IN_DAY);
-  const durationMinutes = Math.round(((durationInMs / SECONDS_IN_DAY * HOURS_IN_DAY) - durationHours) * MINUTES_IN_HOUR);
-  const stringDurationDays = durationDays !== 0 ? addZero(durationDays) + `D ` : ``;
-  const stringDurationHours = durationHours !== 0 ? addZero(durationHours) + `H ` : ``;
-  const stringDurationMinutes = durationMinutes !== 0 ? addZero(durationMinutes) + `M` : ``;
-
+  const durationDays = Math.floor(durationInMs / TimeUnits.SECONDS_IN_DAY);
+  const durationHours = Math.floor(((durationInMs / TimeUnits.SECONDS_IN_DAY) - durationDays) * TimeUnits.HOURS_IN_DAY);
+  const durationMinutes = Math.round(((durationInMs / TimeUnits.SECONDS_IN_DAY * TimeUnits.HOURS_IN_DAY) - durationHours) * TimeUnits.MINUTES_IN_HOUR);
+  const stringDurationDays = durationDays !== 0 ? (durationDays + `D `).padStart(4, `0`) : ``;
+  const stringDurationHours = durationHours !== 0 ? (durationHours + `H `).padStart(4, `0`) : ``;
+  const stringDurationMinutes = durationMinutes !== 0 ? (durationMinutes + `M`).padStart(3, `0`) : ``;
   return stringDurationDays + stringDurationHours + stringDurationMinutes;
 };
 

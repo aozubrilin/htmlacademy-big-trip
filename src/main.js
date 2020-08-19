@@ -8,9 +8,9 @@ import {generateEvents} from "./mock/event.js";
 const ROUTE_POINT_COUNT = 20;
 
 const events = new Array(ROUTE_POINT_COUNT).fill().map(generateEvents);
+
 const sortedEvents = events.slice(0).sort((current, next) => current.dateStart - next.dateStart);
 const days = new Set(sortedEvents.map((it) => it.dateStart.toLocaleDateString()));
-
 const render = (container, template, place) => {
   container.insertAdjacentHTML(place, template);
 };
