@@ -7,10 +7,14 @@ export const getRandomInteger = (min = 0, max = 1) => {
   return Math.floor(lower + Math.random() * (upper - lower + 1));
 };
 
-export const getRandomArrayItem = (arr) => {
-  const randomIndex = getRandomInteger(0, arr.length - 1);
+export const getRandomBoolean = () => {
+  return Boolean(getRandomInteger());
+};
 
-  return arr[randomIndex];
+export const getRandomArrayItem = (items) => {
+  const randomIndex = getRandomInteger(0, items.length - 1);
+
+  return items[randomIndex];
 };
 
 export const createEventTitleType = (type) => {

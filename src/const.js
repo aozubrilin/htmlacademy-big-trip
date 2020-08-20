@@ -23,6 +23,10 @@ export const Destination = {
 
 };
 
+export const Price = {
+  MAX: 200,
+  MIN: 10
+};
 
 export const EVENT_TYPES = {
   transfers: [`Taxi`, `Bus`, `Train`, `Ship`, `Transport`, `Drive`, `Flight`],

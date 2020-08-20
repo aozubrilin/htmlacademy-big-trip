@@ -1,12 +1,16 @@
 import {getISODateTime, getDuration, createEventTitleType} from "../utils.js";
 
-const createOfferTemplate = (offer) => {
+const QuantityDisplayedOffers = {
+  MAX: 3,
+  MIN: 0
+};
 
-  return offer !== null ? offer.slice(0, 3).map((offerItem) =>
+const createOfferTemplate = (offers) => {
+  return offers.slice(QuantityDisplayedOffers.MIN, QuantityDisplayedOffers.MAX).map((offerItem) =>
     `<li class="event__offer">
         <span class="event__offer-title">${offerItem.title}</span>
         &plus;&nbsp;&euro;&nbsp;<span class="event__offer-price">${offerItem.price}</span>
-     </li>`).join(``) : ``;
+     </li>`).join(``);
 };
 
 export const createEventTemplate = (event) => {

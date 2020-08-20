@@ -1,18 +1,14 @@
 import {EVENT_TYPES, Destination} from '../const.js';
-import {OFFERS} from "../mock/offers.js";
+import {addOptions} from "../mock/offers.js";
 import {getDateThroughSlahs, createEventTitleType} from "../utils.js";
 
-const createTypeListTemplate = (currentType) => {
-
-  return Object.entries(EVENT_TYPES).map(([types, typeItems]) =>
-    `<fieldset class="event__type-group"><legend class="visually-hidden">${types}</legend>`
-    + typeItems.map((item) => `<div class="event__type-${item.toLowerCase()}">
-    <input id="event-type-${item.toLowerCase()}-1"
-    class="event__type-input  visually-hidden"a
-    type="radio" name="event-type"
-    value="${item.toLowerCase()}"
-    ${currentType === item ? `checked` : ``}>
-    <label class="event__type-label event__type-label--${item.toLowerCase()}" for="event-type-item-1">${item}</label></div>`).join(``)).join(`</fieldset>`);
+const createTypeListTemplate = (types, currentType) => {
+  return types.map((type, index) => `<div class="event__type-item">
+      <input id="event-type-${type.toLowerCase()}-${index + 1}" class="event__type-input  visually-hidden" type="radio"
+      name="event-type" value="${type.toLowerCase()}"  ${currentType === type ? `checked` : ``}>
+      <label class="event__type-label  event__type-label--${type.toLowerCase()}"
+      for="event-type-${type.toLowerCase()}-${index + 1}">${type}</label>
+      </div>`).join(`\n`);
 };
 
 const createDestinationListTemplate = (destinations) => {
@@ -21,7 +17,7 @@ const createDestinationListTemplate = (destinations) => {
 };
 
 const createOffersTemplate = (eventOffers, types) => {
-  return OFFERS.filter((offer) => offer.type === types).map((item) => eventOffers !== null ?
+  return addOptions.filter((offer) => offer.type === types).map((item) => eventOffers.length ?
     `<section class="event__section  event__section--offers">
       <h3 class="event__section-title  event__section-title--offers">Offers</h3>
       <div class="event__available-offers">
@@ -38,9 +34,8 @@ const createOffersTemplate = (eventOffers, types) => {
   );
 };
 
-
 const createDestinationInfoTemplate = (destinationInfo) => {
-  const photoTemlate = destinationInfo.photo.map((photo) =>`<img class="event__photo" ${photo} alt="Event photo"></img>`).join(`\n`);
+  const photoTemlate = destinationInfo.photos.map((photo) =>`<img class="event__photo" ${photo} alt="Event photo"></img>`).join(`\n`);
   return `<section class="event__section  event__section--destination">
   <h3 class="event__section-title  event__section-title--destination">Destination</h3>
   <p class="event__destination-description">${destinationInfo.description}</p>
@@ -64,10 +59,11 @@ export const createEventEditTemplate = (event = {}) => {
     favorit
   } = event;
 
-  const typeListTemplate = createTypeListTemplate(type);
+  const transferListTemplate = createTypeListTemplate(EVENT_TYPES.transfers, type);
+  const actionsListTemplate = createTypeListTemplate(EVENT_TYPES.actions, type);
   const eventTitleType = createEventTitleType(type);
   const destinationListTemplate = createDestinationListTemplate(Destination.CITIES);
-  const OffersTemplate = createOffersTemplate(offers, type);
+  const offersTemplate = createOffersTemplate(offers, type);
   const destinationInfoTemplate = createDestinationInfoTemplate(destinationInfo);
   const startTime = getDateThroughSlahs(dateStart);
   const endTime = getDateThroughSlahs(dateEnd);
@@ -85,7 +81,14 @@ export const createEventEditTemplate = (event = {}) => {
           <input class="event__type-toggle  visually-hidden" id="event-type-toggle-1" type="checkbox">
 
           <div class="event__type-list">
-           ${typeListTemplate}
+         <fieldset class="event__type-group">
+          <legend class="visually-hidden">Transfer</legend>
+          ${transferListTemplate}
+        </fieldset>
+        <fieldset class="event__type-group">
+          <legend class="visually-hidden">Activity</legend>
+          ${actionsListTemplate}
+        </fieldset>
           </div>
         </div>
 
@@ -136,7 +139,7 @@ export const createEventEditTemplate = (event = {}) => {
       </header>
 
       <section class="event__details">
-         ${OffersTemplate}
+         ${offersTemplate}
          ${destinationInfoTemplate}
       </section>
 

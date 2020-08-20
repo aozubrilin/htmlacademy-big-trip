@@ -19,7 +19,7 @@ export const createTripInfoTemplate = (events) => {
   return (
     `<section class="trip-main__trip-info  trip-info">
     <div class="trip-info__main">
-      <h1 class="trip-info__title">----</h1>
+      <h1 class="trip-info__title">@@@Chtobi Ne Zabil@@@</h1>
 
       <p class="trip-info__dates">${dateTemplate}</p>
     </div>

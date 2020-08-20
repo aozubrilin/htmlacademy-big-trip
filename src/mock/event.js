@@ -1,64 +1,39 @@
-import {getRandomInteger, getRandomArrayItem} from "../utils.js";
-import {Destination, EVENT_TYPES} from '../const.js';
-import {OFFERS} from './offers.js';
+import {getRandomInteger, getRandomArrayItem, getRandomBoolean} from "../utils.js";
+import {Destination, EVENT_TYPES, Price} from '../const.js';
+import {addOptions} from './offers.js';
 import {generateDestinations} from './destination.js';
 
-const Price = {
-  MAX: 200,
-  MIN: 10
-};
+const MAX_DAYS_GAP = 2;
 
 const {transfers, actions} = EVENT_TYPES;
 const types = [...actions, ...transfers];
 
-const destinations = generateDestinations();
+const getDestinationInfo = (destination) => {
+  const destinations = generateDestinations();
 
-
-const getDescription = (destination) => {
-  return destinations.filter((it) => it.city === destination)[0].destinationInfo.description;
+  return destinations.find((it) => it.city === destination).destinationInfo;
 };
 
-const getPhoto = (destination) => {
-  let photos = [];
-  destinations.forEach((it) => {
-    if (it.city === destination) {
-      it.destinationInfo.photos.map((photo) => photos.push(photo));
-    }
-  });
-
-  return photos;
-};
-
-const generateOffers = (type) => {
-  let result = [];
-  OFFERS.map((it) => {
-    if (it.type === type) {
-      it.offers.forEach((offer) => {
-        if (getRandomInteger(0, 1) > 0.5) {
-          result.push(offer);
-        }
-      });
-    }
-  });
-
-  return result.length ? result : null;
+const getOffers = (type) => {
+  const offers = [];
+  addOptions.find((it) => it.type === type).offers.forEach((it) => getRandomBoolean() > 0.5 ? offers.push(it) : ``);
+  return offers;
 };
 
 const generateDateStart = () => {
-  const maxDaysGap = 2;
-  const daysGap = getRandomInteger(-maxDaysGap, maxDaysGap);
+  const daysGap = getRandomInteger(-MAX_DAYS_GAP, MAX_DAYS_GAP);
   const currentDate = new Date();
   currentDate.setDate(currentDate.getDate() + daysGap);
   currentDate.setHours(getRandomInteger(0, 23), getRandomInteger(0, 59));
 
-  return new Date(currentDate);
+  return currentDate;
 };
 
 const generateDateEnd = (date) => {
   const dateStart = new Date(date);
   const dateEnd = new Date(dateStart.setHours(getRandomInteger(dateStart.getHours() + 1, 24), getRandomInteger(0, 59)));
 
-  return new Date(dateEnd);
+  return dateEnd;
 };
 
 export const generateEvents = () => {
@@ -71,13 +46,10 @@ export const generateEvents = () => {
     type,
     destination,
     price: getRandomInteger(Price.MIN, Price.MAX),
-    offers: generateOffers(type),
-    destinationInfo: {
-      description: getDescription(destination),
-      photo: getPhoto(destination)
-    },
+    offers: getOffers(type),
+    destinationInfo: getDestinationInfo(destination),
     dateStart,
     dateEnd,
-    favorit: Boolean(getRandomInteger(0, 1))
+    favorit: getRandomBoolean()
   };
 };
