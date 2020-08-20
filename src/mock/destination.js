@@ -13,8 +13,8 @@ const generatePhoto = () => {
 
 export const generateDestinations = () => {
   const destinations = [];
-  for (const city1 of Destination.CITIES) {
-    destinations.push({city: city1, destinationInfo: {photo: generatePhoto(), description: generateDescription()}});
+  for (const item of Destination.CITIES) {
+    destinations.push({city: item, destinationInfo: {photos: generatePhoto(), description: generateDescription()}});
   }
 
   return destinations;

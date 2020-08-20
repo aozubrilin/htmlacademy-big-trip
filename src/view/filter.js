@@ -1,6 +1,6 @@
-const createFiterItemsTemlate = (filter) => {
+const createFiterItemsTemlate = (filters) => {
 
-  return filter.map((it) =>`<div class="trip-filters__filter">
+  return filters.map((it) =>`<div class="trip-filters__filter">
                           <input id="filter-${it.name.toLowerCase()}" class="trip-filters__filter-input  visually-hidden"
                           type="radio" name="trip-filter" value="${it.name.toLowerCase()}" ${it.isChecked ? `checked` : ``}>
                           <label class="trip-filters__filter-label" for="filter-${it.name.toLowerCase()}">${it.name}</label>
@@ -9,7 +9,7 @@ const createFiterItemsTemlate = (filter) => {
 
 export const createFilterTemplate = () => {
 
-  const filter = [
+  const filters = [
     {
       name: `Everything`,
       isChecked: true,
@@ -24,7 +24,7 @@ export const createFilterTemplate = () => {
     },
   ];
 
-  const filterItemsTemplate = createFiterItemsTemlate(filter);
+  const filterItemsTemplate = createFiterItemsTemlate(filters);
 
   return (
     `<h2 class="visually-hidden">Filter events</h2>

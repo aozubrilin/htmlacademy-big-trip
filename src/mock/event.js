@@ -3,8 +3,10 @@ import {Destination, EVENT_TYPES} from '../const.js';
 import {OFFERS} from './offers.js';
 import {generateDestinations} from './destination.js';
 
-const MAX_PRICE = 200;
-const MIN_PRICE = 10;
+const Price = {
+  MAX: 200,
+  MIN: 10
+};
 
 const {transfers, actions} = EVENT_TYPES;
 const types = [...actions, ...transfers];
@@ -13,14 +15,14 @@ const destinations = generateDestinations();
 
 
 const getDescription = (destination) => {
-  return destinations.filter((it) => it.city === destination).map((it) => it.destinationInfo.description).join(``);
+  return destinations.filter((it) => it.city === destination)[0].destinationInfo.description;
 };
 
 const getPhoto = (destination) => {
   let photos = [];
-  destinations.map((it)=>{
+  destinations.forEach((it) => {
     if (it.city === destination) {
-      photos = it.destinationInfo.photo;
+      it.destinationInfo.photos.map((photo) => photos.push(photo));
     }
   });
 
@@ -68,7 +70,7 @@ export const generateEvents = () => {
   return {
     type,
     destination,
-    price: getRandomInteger(MIN_PRICE, MAX_PRICE),
+    price: getRandomInteger(Price.MIN, Price.MAX),
     offers: generateOffers(type),
     destinationInfo: {
       description: getDescription(destination),

@@ -5,7 +5,7 @@ import {createSortTemplate} from "./view/sort.js";
 import {createDaysTemplate} from "./view/days.js";
 import {generateEvents} from "./mock/event.js";
 
-const ROUTE_POINT_COUNT = 20;
+const ROUTE_POINT_COUNT = 3;
 
 const events = new Array(ROUTE_POINT_COUNT).fill().map(generateEvents);
 
