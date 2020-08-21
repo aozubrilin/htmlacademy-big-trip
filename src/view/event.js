@@ -1,4 +1,4 @@
-import {getISODateTime, getDuration, createEventTitleType} from "../utils.js";
+import {getISODateTime, getDuration, createEventTitleType, createElement} from "../utils.js";
 
 const QuantityDisplayedOffers = {
   MAX: 3,
@@ -13,7 +13,7 @@ const createOfferTemplate = (offers) => {
      </li>`).join(``);
 };
 
-export const createEventTemplate = (event) => {
+const createEventTemplate = (event) => {
   const {type, destination, price, offers, dateStart, dateEnd} = event;
 
   const eventTitleType = createEventTitleType(type);
@@ -55,3 +55,26 @@ export const createEventTemplate = (event) => {
   </li>`
   );
 };
+
+export default class Event {
+  constructor(event) {
+    this._event = event;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createEventTemplate(this._event);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

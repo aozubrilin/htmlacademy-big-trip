@@ -1,3 +1,5 @@
+import {createElement} from "../utils.js";
+
 const ICON = `<svg class="trip-sort__direction-icon" width="8" height="10" viewBox="0 0 8 10">
               <path d="M2.888 4.852V9.694H5.588V4.852L7.91 5.068L4.238 0.00999987L0.548 5.068L2.888 4.852Z"/>
               </svg>`;
@@ -13,7 +15,7 @@ const createSortItemsTemplate = (sortItems) => {
         </div>`).join(``);
 };
 
-export const createSortTemplate = () => {
+const createSortTemplate = () => {
 
   const sortItems = [
     {
@@ -56,3 +58,26 @@ export const createSortTemplate = () => {
     </form>`
   );
 };
+
+export default class Sort {
+  constructor() {
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createSortTemplate();
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
+
