@@ -1,3 +1,5 @@
+import {createElement} from "../utils.js";
+
 const createFiterItemsTemlate = (filters) => {
 
   return filters.map((it) =>`<div class="trip-filters__filter">
@@ -7,7 +9,7 @@ const createFiterItemsTemlate = (filters) => {
                           </div>`).join(``);
 };
 
-export const createFilterTemplate = () => {
+const createFilterTemplate = () => {
 
   const filters = [
     {
@@ -27,8 +29,7 @@ export const createFilterTemplate = () => {
   const filterItemsTemplate = createFiterItemsTemlate(filters);
 
   return (
-    `<h2 class="visually-hidden">Filter events</h2>
-    <form class="trip-filters" action="#" method="get">
+    ` <form class="trip-filters" action="#" method="get">
 
     ${filterItemsTemplate}
 
@@ -36,3 +37,25 @@ export const createFilterTemplate = () => {
     </form>`
   );
 };
+
+export default class Filter {
+  constructor() {
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createFilterTemplate();
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

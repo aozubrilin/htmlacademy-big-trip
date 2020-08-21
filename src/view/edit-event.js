@@ -1,6 +1,17 @@
 import {EVENT_TYPES, Destination} from '../const.js';
 import {addOptions} from "../mock/offers.js";
-import {getDateThroughSlahs, createEventTitleType} from "../utils.js";
+import {getDateThroughSlahs, createEventTitleType, createElement} from "../utils.js";
+
+const BLANK_EVENT = {
+  type: `Taxi`,
+  destination: `Chamonix`,
+  dateStart: new Date(),
+  dateEnd: new Date(),
+  price: 0,
+  offers: [],
+  destinationInfo: ``,
+  favorit: false
+};
 
 const createTypeListTemplate = (types, currentType) => {
   return types.map((type, index) => `<div class="event__type-item">
@@ -16,22 +27,26 @@ const createDestinationListTemplate = (destinations) => {
   return destinations.map((item) => `<option value="${item}"></option>`).join(``);
 };
 
-const createOffersTemplate = (eventOffers, types) => {
-  return addOptions.filter((offer) => offer.type === types).map((item) => eventOffers.length ?
-    `<section class="event__section  event__section--offers">
-      <h3 class="event__section-title  event__section-title--offers">Offers</h3>
-      <div class="event__available-offers">
+const createOffersTemplate = (eventOffers, eventType) => {
+  return addOptions
+    .filter((offer) => offer.type === eventType)[0]
+    .offers.map((it, index) =>`<div class="event__offer-selector">
+                          <input class="event__offer-checkbox  visually-hidden" id="event-offer-${it.lable}-${index + 1}"
+                            type="checkbox" name="event-offer-${it.lable}" ${ eventOffers.includes(it) ? `checked` : ``}>
+                           <label class="event__offer-label" for="event-offer-${it.lable}-${index + 1}">
+                            <span class="event__offer-title">${it.title}</span>
+                            &plus;
+                            &euro;&nbsp;<span class="event__offer-price">${it.price}</span>
+                            </label>
+                         </div>`).join(`\n`);
+};
 
-    ${item.offers.map((offer) => `<div class="event__offer-selector">
-          <input class="event__offer-checkbox  visually-hidden" id="event-offer-${offer.lable}-1"
-           type="checkbox" name="event-offer-${offer.lable}" ${ eventOffers.includes(offer) ? `checked` : ``}>
-          <label class="event__offer-label" for="event-offer-${offer.lable}-1">
-          <span class="event__offer-title">${offer.title}</span>
-          &plus;
-          &euro;&nbsp;<span class="event__offer-price">${offer.price}</span>
-          </label></div>`).join(`\n`)}</div>
-       </section>` : ``
-  );
+const createOffersTemplateEL = (eventOffers, eventType) => {
+
+  return `<section class="event__section  event__section--offers">
+            <h3 class="event__section-title  event__section-title--offers">Offers</h3>
+            <div class="event__available-offers">${createOffersTemplate(eventOffers, eventType)}</div>
+          </section>`;
 };
 
 const createDestinationInfoTemplate = (destinationInfo) => {
@@ -47,23 +62,15 @@ const createDestinationInfoTemplate = (destinationInfo) => {
 </section>`;
 };
 
-export const createEventEditTemplate = (event = {}) => {
-  const {
-    type = `Taxi`,
-    destination = `Chamonix`,
-    dateStart = new Date(),
-    dateEnd = new Date(),
-    price = 0,
-    offers = ``,
-    destinationInfo,
-    favorit
-  } = event;
+const createEventEditTemplate = (event = {}) => {
+  const {type, destination, price, offers, dateStart, destinationInfo, dateEnd, favorit} = event;
 
   const transferListTemplate = createTypeListTemplate(EVENT_TYPES.transfers, type);
   const actionsListTemplate = createTypeListTemplate(EVENT_TYPES.actions, type);
   const eventTitleType = createEventTitleType(type);
   const destinationListTemplate = createDestinationListTemplate(Destination.CITIES);
-  const offersTemplate = createOffersTemplate(offers, type);
+  const lengthAddOptionsForType = addOptions.filter((offer) => offer.type === type)[0].offers.length;
+  const offersTemplate = createOffersTemplateEL(offers, type);
   const destinationInfoTemplate = createDestinationInfoTemplate(destinationInfo);
   const startTime = getDateThroughSlahs(dateStart);
   const endTime = getDateThroughSlahs(dateEnd);
@@ -139,7 +146,7 @@ export const createEventEditTemplate = (event = {}) => {
       </header>
 
       <section class="event__details">
-         ${offersTemplate}
+         ${lengthAddOptionsForType ? offersTemplate : ``}
          ${destinationInfoTemplate}
       </section>
 
@@ -147,3 +154,26 @@ export const createEventEditTemplate = (event = {}) => {
   </li>`
   );
 };
+
+export default class EditEvent {
+  constructor(event = Object.assign({}, BLANK_EVENT)) {
+    this._event = event;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createEventEditTemplate(this._event);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

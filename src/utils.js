@@ -1,5 +1,41 @@
 import {TimeUnits, EVENT_TYPES} from './const.js';
 
+const DateSettings = {
+  DATE: {day: `numeric`, month: `2-digit`, year: `2-digit`},
+  TIME: {hour12: false, hour: `2-digit`, minute: `numeric`}
+};
+
+export const RenderPosition = {
+  AFTERBEGIN: `afterbegin`,
+  BEFOREEND: `beforeend`,
+  AFTEREND: `afterend`
+};
+
+export const render = (container, element, place) => {
+  switch (place) {
+    case RenderPosition.AFTERBEGIN:
+      container.prepend(element);
+      break;
+    case RenderPosition.BEFOREEND:
+      container.append(element);
+      break;
+    case RenderPosition.AFTEREND:
+      container.after(element);
+      break;
+  }
+};
+
+export const renderTemplate = (container, template, place) => {
+  container.insertAdjacentHTML(place, template);
+};
+
+export const createElement = (template) => {
+  const newElement = document.createElement(`div`);
+  newElement.innerHTML = template;
+
+  return newElement.firstElementChild;
+};
+
 export const getRandomInteger = (min = 0, max = 1) => {
   const lower = Math.ceil(Math.min(min, max));
   const upper = Math.floor(Math.max(min, max));
@@ -22,7 +58,7 @@ export const createEventTitleType = (type) => {
 };
 
 export const getISODateTime = (date) => {
-  return date.toISOString().slice(0, 16);
+  return date.toLocaleDateString(`lt-LT`, DateSettings.DATE).replace(/[/]/g, `-`) + `T` + date.toLocaleString(`ru-GB`, DateSettings.TIME);
 };
 
 export const getDuration = (dateStart, dateEnd) => {
@@ -36,15 +72,12 @@ export const getDuration = (dateStart, dateEnd) => {
   return stringDurationDays + stringDurationHours + stringDurationMinutes;
 };
 
-
 export const getShortDate = (date) => {
   return date.toLocaleDateString(`en-US`, {month: `short`, day: `2-digit`});
 };
 
 export const getDateThroughSlahs = (date) => {
-  const optionsDate = {day: `numeric`, month: `2-digit`, year: `2-digit`};
-  const optionsTime = {hour12: false, hour: `2-digit`, minute: `numeric`};
-  return date.toLocaleString(`en-GB`, optionsDate) + ` ` + date.toLocaleString(`ru-GB`, optionsTime);
+  return date.toLocaleString(`en-GB`, DateSettings.DATE) + ` ` + date.toLocaleString(`ru-GB`, DateSettings.TIME);
 };
 
 

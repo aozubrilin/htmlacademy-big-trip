@@ -20,17 +20,15 @@ const MAX_QUANTITY_OFFERS = 5;
 const generateOffersItems = () => {
   const countOffersItem = getRandomInteger(0, MAX_QUANTITY_OFFERS);
   return new Array(countOffersItem).fill()
-   .map(() => Object.assign(MOK_OFFERS[getRandomInteger(0, MOK_OFFERS.length - 1)], {price: getRandomInteger(Price.MIN, Price.MAX)}));
+   .map(() => Object.assign({}, MOK_OFFERS[getRandomInteger(0, MOK_OFFERS.length - 1)], {price: getRandomInteger(Price.MIN, Price.MAX)}));
 };
 
 const generateAddOptions = () => {
   const types = [...EVENT_TYPES.transfers, ...EVENT_TYPES.actions];
-  const addOptions = [];
-  for (const item of types) {
-    addOptions.push({type: item, offers: (generateOffersItems())});
-  }
 
-  return addOptions;
+  return types.map((it) => {
+    return {type: it, offers: (generateOffersItems())};
+  });
 };
 
 export const addOptions = generateAddOptions();
