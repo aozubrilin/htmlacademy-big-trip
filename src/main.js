@@ -11,10 +11,10 @@ import {generateEvents} from "./mock/event.js";
 import {render, RenderPosition} from "./utils.js";
 
 const ROUTE_POINT_COUNT = 20;
+const ESC_KEY = `Escape` || `Esc`;
 
 const events = new Array(ROUTE_POINT_COUNT).fill().map(generateEvents);
 const sortedEvents = events.slice().sort((current, next) => current.dateStart - next.dateStart);
-const days = new Set(sortedEvents.map((it) => it.dateStart.toLocaleDateString()));
 
 const siteBodyElement = document.querySelector(`.page-body`);
 const tripMainContainer = siteBodyElement.querySelector(`.trip-main`);
@@ -33,8 +33,17 @@ const renderEvent = (eventListElement, event) => {
     eventListElement.replaceChild(eventComponent.getElement(), eventEditComponent.getElement());
   };
 
+  const onEscKeyDown = (evt) => {
+    if (evt.key === ESC_KEY) {
+      evt.preventDefault();
+      replaceFormToEvent();
+      document.removeEventListener(`keydown`, onEscKeyDown);
+    }
+  };
+
   eventComponent.getElement().querySelector(`.event__rollup-btn`).addEventListener(`click`, () => {
     replaceEventToForm();
+    document.addEventListener(`keydown`, onEscKeyDown);
   });
 
   eventEditComponent.getElement().querySelector(`.event__reset-btn`).addEventListener(`click`, () => {
@@ -44,6 +53,7 @@ const renderEvent = (eventListElement, event) => {
   eventEditComponent.getElement().addEventListener(`submit`, (evt) => {
     evt.preventDefault();
     replaceFormToEvent();
+    document.removeEventListener(`keydown`, onEscKeyDown);
   });
 
   render(eventListElement, eventComponent.getElement(), RenderPosition.BEFOREEND);
@@ -61,17 +71,21 @@ if (!events.length) {
   render(tripEventsContainer, new SortView().getElement(), RenderPosition.BEFOREEND);
   render(tripEventsContainer, daysComponent.getElement(), RenderPosition.BEFOREEND);
 
-  [...days].forEach((day, index) => {
-    const dayComponent = new DayItemView(day, index, events);
+  const groupsEventsByDate = sortedEvents.reduce((group, event) => {
+    const date = event.dateStart.toLocaleDateString();
 
+    if (!group[date]) {
+      group[date] = [];
+    }
+    group[date].push(event);
+    return group;
+  }, {});
+
+  Object.keys(groupsEventsByDate).map((date, index) => {
+    const dayComponent = new DayItemView(date, index, events);
     render(daysComponent.getElement(), dayComponent.getElement(), RenderPosition.BEFOREEND);
-
-    const eventsToday = sortedEvents.filter((event) => event.dateStart.toLocaleDateString() === day);
-
-    eventsToday.forEach((event) => {
+    for (const event of groupsEventsByDate[date]) {
       renderEvent(dayComponent.getElement().querySelector(`.trip-events__list`), event);
-    });
+    }
   });
 }
-
-

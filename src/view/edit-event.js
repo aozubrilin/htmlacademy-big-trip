@@ -27,9 +27,10 @@ const createDestinationListTemplate = (destinations) => {
   return destinations.map((item) => `<option value="${item}"></option>`).join(``);
 };
 
-const createOffersTemplate = (eventOffers, eventType) => {
+const createOfferItemsTemplate = (eventOffers, eventType) => {
+
   return addOptions
-    .filter((offer) => offer.type === eventType)[0]
+    .find((offer) => offer.type === eventType)
     .offers.map((it, index) =>`<div class="event__offer-selector">
                           <input class="event__offer-checkbox  visually-hidden" id="event-offer-${it.lable}-${index + 1}"
                             type="checkbox" name="event-offer-${it.lable}" ${ eventOffers.includes(it) ? `checked` : ``}>
@@ -41,11 +42,11 @@ const createOffersTemplate = (eventOffers, eventType) => {
                          </div>`).join(`\n`);
 };
 
-const createOffersTemplateEL = (eventOffers, eventType) => {
+const createOffersTemplate = (eventOffers, eventType) => {
 
   return `<section class="event__section  event__section--offers">
             <h3 class="event__section-title  event__section-title--offers">Offers</h3>
-            <div class="event__available-offers">${createOffersTemplate(eventOffers, eventType)}</div>
+            <div class="event__available-offers">${createOfferItemsTemplate(eventOffers, eventType)}</div>
           </section>`;
 };
 
@@ -69,8 +70,8 @@ const createEventEditTemplate = (event = {}) => {
   const actionsListTemplate = createTypeListTemplate(EVENT_TYPES.actions, type);
   const eventTitleType = createEventTitleType(type);
   const destinationListTemplate = createDestinationListTemplate(Destination.CITIES);
-  const lengthAddOptionsForType = addOptions.filter((offer) => offer.type === type)[0].offers.length;
-  const offersTemplate = createOffersTemplateEL(offers, type);
+  const lengthAddOptionsForType = addOptions.find((offer) => offer.type === type).offers.length;
+  const offersTemplate = createOffersTemplate(offers, type);
   const destinationInfoTemplate = createDestinationInfoTemplate(destinationInfo);
   const startTime = getDateThroughSlahs(dateStart);
   const endTime = getDateThroughSlahs(dateEnd);
