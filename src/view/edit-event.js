@@ -1,6 +1,7 @@
+import AbstractView from "./abstract.js";
 import {EVENT_TYPES, Destination} from '../const.js';
 import {addOptions} from "../mock/offers.js";
-import {getDateThroughSlahs, createEventTitleType, createElement} from "../utils.js";
+import {getDateThroughSlahs, createEventTitleType} from "../utils/event.js";
 
 const BLANK_EVENT = {
   type: `Taxi`,
@@ -156,25 +157,35 @@ const createEventEditTemplate = (event = {}) => {
   );
 };
 
-export default class EditEvent {
+export default class EditEvent extends AbstractView {
   constructor(event = Object.assign({}, BLANK_EVENT)) {
+    super();
     this._event = event;
-    this._element = null;
+    this._submitForm = this._submitForm.bind(this);
+    this._deleteClickHandler = this._deleteClickHandler.bind(this);
   }
 
   getTemplate() {
     return createEventEditTemplate(this._event);
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
+  _submitForm(evt) {
+    evt.preventDefault();
+    this._callback._submitForm();
   }
 
-  removeElement() {
-    this._element = null;
+  setSubmitFormHandler(callback) {
+    this._callback._submitForm = callback;
+    this.getElement().addEventListener(`submit`, this._submitForm);
+  }
+
+  _deleteClickHandler(evt) {
+    evt.preventDefault();
+    this._callback.deleteClick();
+  }
+
+  setdeletelickHandler(callback) {
+    this._callback.deleteClick = callback;
+    this.getElement().querySelector(`.event__reset-btn`).addEventListener(`click`, this._deleteClickHandler);
   }
 }

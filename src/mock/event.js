@@ -1,4 +1,4 @@
-import {getRandomInteger, getRandomArrayItem, getRandomBoolean} from "../utils.js";
+import {getRandomInteger, getRandomArrayItem, getRandomBoolean} from "../utils/common.js";
 import {Destination, EVENT_TYPES, Price} from '../const.js';
 import {addOptions} from './offers.js';
 import {generateDestinations} from './destination.js';

@@ -1,5 +1,5 @@
 import {Destination} from '../const.js';
-import {getRandomInteger, getRandomArrayItem} from "../utils.js";
+import {getRandomInteger, getRandomArrayItem} from "../utils/common.js";
 
 const generateDescription = () => {
   const splitTexts = Destination.DESCRIPTION.split(`\n`);

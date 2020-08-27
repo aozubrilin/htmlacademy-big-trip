@@ -1,4 +1,6 @@
-import {getISODateTime, getShortDate, createElement} from "../utils.js";
+import AbstractView from "./abstract.js";
+import {getISODateTime, getShortDate} from "../utils/event.js";
+
 
 const createDayItemTemplate = (day, index, events) => {
 
@@ -19,27 +21,15 @@ const createDayItemTemplate = (day, index, events) => {
   );
 };
 
-export default class DayItem {
+export default class DayItem extends AbstractView {
   constructor(day, index, events) {
+    super();
     this._day = day;
     this._index = index;
     this._events = events;
-    this._element = null;
   }
 
   getTemplate() {
     return createDayItemTemplate(this._day, this._index, this._events);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }
