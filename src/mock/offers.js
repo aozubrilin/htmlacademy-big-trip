@@ -1,5 +1,5 @@
 import {EVENT_TYPES, Price} from '../const.js';
-import {getRandomInteger} from '../utils.js';
+import {getRandomInteger} from "../utils/common.js";
 
 const MOK_OFFERS = [
   {lable: `order`, title: `Order Uber`},

@@ -1,4 +1,5 @@
-import {getShortDate, createElement} from "../utils.js";
+import AbstractView from "./abstract.js";
+import {getShortDate} from "../utils/event.js";
 
 const getDateTemplate = (events, eventsByDateEnd) => {
   const dateStart = getShortDate(events[0].dateStart);
@@ -30,25 +31,13 @@ const createTripInfoTemplate = (events) => {
   );
 };
 
-export default class TripInfo {
+export default class TripInfo extends AbstractView {
   constructor(events) {
+    super();
     this._events = events;
-    this._element = null;
   }
 
   getTemplate() {
     return createTripInfoTemplate(this._events);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }
