@@ -1,22 +1,17 @@
 import {getRandomInteger, getRandomArrayItem, getRandomBoolean} from "../utils/common.js";
-import {Destination, EVENT_TYPES, Price} from '../const.js';
-import {addOptions} from './offers.js';
-import {generateDestinations} from './destination.js';
+import {Destination, EVENT_TYPES, Price} from "../const.js";
+import {mockOptions} from "../main.js";
 
 const MAX_DAYS_GAP = 2;
 
 const {transfers, actions} = EVENT_TYPES;
 const types = [...actions, ...transfers];
 
-const getDestinationInfo = (destination) => {
-  const destinations = generateDestinations();
-
-  return destinations.find((it) => it.city === destination).destinationInfo;
-};
+const generateId = () => Date.now() + parseInt(Math.random() * 10000, 10);
 
 const getOffers = (type) => {
   const offers = [];
-  addOptions.find((it) => it.type === type).offers.forEach((it) => getRandomBoolean() > 0.5 ? offers.push(it) : ``);
+  mockOptions.find((it) => it.type === type).offers.forEach((it) => getRandomBoolean() > 0.5 ? offers.push(it) : ``);
   return offers;
 };
 
@@ -43,13 +38,13 @@ export const generateEvents = () => {
   const destination = getRandomArrayItem(Destination.CITIES);
 
   return {
+    id: generateId(),
     type,
     destination,
     price: getRandomInteger(Price.MIN, Price.MAX),
     offers: getOffers(type),
-    destinationInfo: getDestinationInfo(destination),
     dateStart,
     dateEnd,
-    favorit: getRandomBoolean()
+    isFavorite: getRandomBoolean()
   };
 };

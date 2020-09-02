@@ -23,7 +23,7 @@ const generateOffersItems = () => {
    .map(() => Object.assign({}, MOK_OFFERS[getRandomInteger(0, MOK_OFFERS.length - 1)], {price: getRandomInteger(Price.MIN, Price.MAX)}));
 };
 
-const generateAddOptions = () => {
+export const generateAddOptions = () => {
   const types = [...EVENT_TYPES.transfers, ...EVENT_TYPES.actions];
 
   return types.map((it) => {
