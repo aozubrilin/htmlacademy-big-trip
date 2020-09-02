@@ -1,9 +1,15 @@
 import TripInfoView from "./view/trip-info.js";
 import SiteMenuView from "./view/site-menu.js";
 import FilterView from "./view/filter.js";
-import TripPresenter from './presenter/trip.js';
+import TripPresenter from "./presenter/trip.js";
 import {generateEvents} from "./mock/event.js";
+import {generateAddOptions} from "./mock/offers.js";
+import {generateDestinations} from "./mock/destination.js";
 import {render, RenderPosition} from "./utils/render.js";
+
+
+export const mockOptions = generateAddOptions();
+const mockDestinations = generateDestinations();
 
 const ROUTE_POINT_COUNT = 20;
 
@@ -19,5 +25,6 @@ render(tripMainContainer, new TripInfoView(sortedEvents), RenderPosition.AFTERBE
 render(tripMenu.querySelector(`h2`), new SiteMenuView(), RenderPosition.AFTEREND);
 render(tripMenu, new FilterView(), RenderPosition.BEFOREEND);
 
+
 const tripPresenter = new TripPresenter(tripEventsContainer);
-tripPresenter.init(events);
+tripPresenter.init(events, mockOptions, mockDestinations);
