@@ -5,7 +5,7 @@ const createDayInfoTemplate = (day, index) => {
   const date = new Date(day.replace(/(\d{2})\.(\d{2})\.(\d{4})/, `$3-$2-$1`));
 
   return `<span class="day__counter">${index + 1}</span>
-            <time class="day__date" datetime="${getISODateTime(date)}">${getShortDate(date)}</time>`;
+            <time class="day__date" datetime="${getISODateTime(date).slice(0, -6)}">${getShortDate(date)}</time>`;
 };
 
 const createDayItemTemplate = (day, index) => {

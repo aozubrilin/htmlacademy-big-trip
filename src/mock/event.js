@@ -11,7 +11,7 @@ const generateId = () => Date.now() + parseInt(Math.random() * 10000, 10);
 
 const getOffers = (type) => {
   const offers = [];
-  mockOptions.find((it) => it.type === type).offers.forEach((it) => getRandomBoolean() > 0.5 ? offers.push(it) : ``);
+  mockOptions.find((it) => it.type === type).offers.forEach((it) => getRandomBoolean() && offers.push(it));
   return offers;
 };
 

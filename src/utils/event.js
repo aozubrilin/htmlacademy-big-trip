@@ -1,31 +1,30 @@
-import {TimeUnits, EVENT_TYPES} from '../const.js';
-
-const DateSettings = {
-  DATE: {day: `numeric`, month: `2-digit`, year: `2-digit`},
-  TIME: {hour12: false, hour: `2-digit`, minute: `numeric`}
-};
+import {EVENT_TYPES} from '../const.js';
+import moment from "moment";
 
 export const getISODateTime = (date) => {
-  return date.toLocaleDateString(`lt-LT`, DateSettings.DATE).replace(/[/]/g, `-`) + `T` + date.toLocaleString(`ru-GB`, DateSettings.TIME);
+  return moment(date).format(`YYYY-MM-DD[T]HH:mm`);
 };
 
 export const getDuration = (dateStart, dateEnd) => {
-  const durationInMs = (dateEnd - dateStart);
-  const durationDays = Math.floor(durationInMs / TimeUnits.SECONDS_IN_DAY);
-  const durationHours = Math.floor(((durationInMs / TimeUnits.SECONDS_IN_DAY) - durationDays) * TimeUnits.HOURS_IN_DAY);
-  const durationMinutes = Math.round(((durationInMs / TimeUnits.SECONDS_IN_DAY * TimeUnits.HOURS_IN_DAY) - durationHours) * TimeUnits.MINUTES_IN_HOUR);
-  const stringDurationDays = durationDays !== 0 ? (durationDays + `D `).padStart(4, `0`) : ``;
-  const stringDurationHours = durationHours !== 0 ? (durationHours + `H `).padStart(4, `0`) : ``;
-  const stringDurationMinutes = durationMinutes !== 0 ? (durationMinutes + `M`).padStart(3, `0`) : ``;
-  return stringDurationDays + stringDurationHours + stringDurationMinutes;
+  const diff = moment(dateEnd).diff(dateStart);
+  const duration = moment.duration(diff);
+  const days = duration.days() ? (duration.days() + `D`).padStart(3, `0`) : ``;
+  const hours = duration.hours() ? (duration.hours() + `H`).padStart(3, `0`) : ``;
+  const minutes = duration.minutes() ? (duration.minutes() + `M`).padStart(3, `0`) : ``;
+
+  return `${days} ${hours} ${minutes}`.trim();
 };
 
 export const getShortDate = (date) => {
-  return date.toLocaleDateString(`en-US`, {month: `short`, day: `2-digit`});
+  return moment(date).format(`MMM D`);
 };
 
 export const getDateThroughSlahs = (date) => {
-  return date.toLocaleString(`en-GB`, DateSettings.DATE) + ` ` + date.toLocaleString(`ru-GB`, DateSettings.TIME);
+  if (!(date instanceof Date)) {
+    return ``;
+  }
+
+  return moment(date).format(`DD/MM/YYYY HH:mm`);
 };
 
 export const createEventTitleType = (type) => {
