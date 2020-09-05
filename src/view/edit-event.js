@@ -167,7 +167,7 @@ export default class EditEvent extends SmartView {
     this._data = EditEvent.parseEventToData(event);
     this._options = options;
     this._destinations = destinations;
-    this._datepicker = null;
+    this._datepickers = null;
 
     this._submitForm = this._submitForm.bind(this);
     this._deleteClickHandler = this._deleteClickHandler.bind(this);
@@ -185,9 +185,9 @@ export default class EditEvent extends SmartView {
   }
 
   _setDatePicker() {
-    if (this._datepicker) {
-      this._datepicker.forEach((item) => item.destroy());
-      this._datepicker = null;
+    if (this._datepickers) {
+      this._datepickers.forEach((item) => item.destroy());
+      this._datepickers = null;
     }
 
     const eventStartTime = flatpickr(
@@ -196,49 +196,48 @@ export default class EditEvent extends SmartView {
           enableTime: true,
           // eslint-disable-next-line camelcase
           time_24hr: true,
-          dateFormat: `d/m/y H:i`,
+          dateFormat: `d/m/Y H:i`,
           defaultDate: this._data.dateStart,
           onChange: this._dateChangeHandler
         }
     );
 
-    const eventEndtTime = flatpickr(
+    const eventEndTime = flatpickr(
         this.getElement().querySelector(`.event__input--time[name="event-end-time"]`),
         {
           enableTime: true,
           // eslint-disable-next-line camelcase
           time_24hr: true,
-          dateFormat: `d/m/y H:i`,
+          dateFormat: `d/m/Y H:i`,
           defaultDate: this._data.dateEnd,
           minDate: this._data.dateStart,
           onChange: this._dateChangeHandler
         }
     );
 
-    this._datepicker = [eventStartTime, eventEndtTime];
+    this._datepickers = [eventStartTime, eventEndTime];
   }
 
   _dateChangeHandler([userDate], str, picker) {
 
-    if (picker === this._datepicker[0]) {
-      if (userDate > this._datepicker[1].latestSelectedDateObj) {
+    if (picker === this._datepickers[0]) {
+      if (userDate > this._datepickers[1].latestSelectedDateObj) {
         this.updateData({
           dateStart: userDate,
           dateEnd: userDate
-        });
+        }, true);
       }
 
       this.updateData({
         dateStart: userDate
-      });
+      }, true);
 
     } else {
       this.updateData({
         dateEnd: userDate
-      });
+      }, true);
     }
   }
-
 
   reset(event) {
     this.updateData(EditEvent.parseEventToData(event));
