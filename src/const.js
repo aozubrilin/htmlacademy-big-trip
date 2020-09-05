@@ -33,12 +33,6 @@ export const EVENT_TYPES = {
   actions: [`Check-in`, `Sightseeing`, `Restaurant`]
 };
 
-export const TimeUnits = {
-  SECONDS_IN_DAY: 864e5,
-  HOURS_IN_DAY: 24,
-  MINUTES_IN_HOUR: 60
-};
-
 export const SortType = {
   DEFAULT: `sort-event`,
   DURATION: `sort-time`,
