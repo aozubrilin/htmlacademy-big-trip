@@ -28,7 +28,6 @@ export const render = (container, child, place) => {
   }
 };
 
-
 export const renderTemplate = (container, template, place) => {
   if (container instanceof Abstract) {
     container = container.getElement();
@@ -63,6 +62,11 @@ export const replace = (newChild, oldChild) => {
 };
 
 export const remove = (component) => {
+
+  if (component === null) {
+    return;
+  }
+
   if (!(component instanceof Abstract)) {
     throw new Error(`Can remove only components`);
   }

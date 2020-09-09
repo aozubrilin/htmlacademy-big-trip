@@ -7,7 +7,7 @@ const MAX_DAYS_GAP = 2;
 const {transfers, actions} = EVENT_TYPES;
 const types = [...actions, ...transfers];
 
-const generateId = () => Date.now() + parseInt(Math.random() * 10000, 10);
+export const generateId = () => Date.now() + parseInt(Math.random() * 10000, 10);
 
 const getOffers = (type) => {
   const offers = [];

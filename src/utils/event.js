@@ -1,4 +1,4 @@
-import {EVENT_TYPES} from '../const.js';
+import {EVENT_TYPES} from "../const.js";
 import moment from "moment";
 
 export const getISODateTime = (date) => {
@@ -29,4 +29,20 @@ export const getDateThroughSlahs = (date) => {
 
 export const createEventTitleType = (type) => {
   return EVENT_TYPES.actions.includes(type) ? `${type} in` : `${type} to`;
+};
+
+export const sortByDefault = (eventA, eventB) => {
+  return eventA.dateStart - eventB.dateStart;
+};
+
+export const sortByTime = (eventA, eventB) => {
+  return (moment(eventA.dateStart).diff(eventA.dateEnd)) - (moment(eventB.dateStart).diff(eventB.dateEnd));
+};
+
+export const sortByPrice = (eventA, eventB) => {
+  return eventB.price - eventA.price;
+};
+
+export const isEqual = (a, b) => {
+  return (a === b) ? true : false;
 };
