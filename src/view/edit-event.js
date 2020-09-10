@@ -33,7 +33,7 @@ const createDestinationListTemplate = (destinations) => {
 const getCurrentOffers = (offers) => {
   const currentOffersTitle = new Set();
 
-  for (let offer of offers) {
+  for (const offer of offers) {
     currentOffersTitle.add(offer.title);
   }
   return currentOffersTitle;
@@ -67,13 +67,13 @@ const createOffersTemplate = (offers, eventType, event) => {
 };
 
 const isDestinationsAvailable = (destination) => {
-  return destination ? true : false;
+  return destination !== ``;
 };
 
 const createDestinationInfoTemplate = (destination, items) => {
   const currentDestination = items.find((it) => it.city === destination);
 
-  const photoTemplate = () => {
+  const getPhotoTemplate = () => {
     return currentDestination.destinationInfo.photos.length
       ? currentDestination.destinationInfo.photos
         .map((photo) => `<img class="event__photo" ${photo} alt="Event photo"></img>`).join(`\n`) : ``;
@@ -84,7 +84,7 @@ const createDestinationInfoTemplate = (destination, items) => {
   <p class="event__destination-description">${currentDestination.destinationInfo.description}</p>
   <div class="event__photos-container">
     <div class="event__photos-tape">
-    ${photoTemplate()}
+    ${getPhotoTemplate()}
     </div>
   </div>
 </section>`;
@@ -304,19 +304,14 @@ export default class EditEvent extends SmartView {
 
     const availableDestination = new Set();
     const destinations = this._destinationsModel.getDestinations();
-    for (let destination of destinations) {
+    for (const destination of destinations) {
       availableDestination.add(destination.city);
     }
 
-    if (availableDestination.has(evt.target.value)) {
-      this.updateData({
-        destination: evt.target.value
-      });
-    } else {
-      this.updateData({
-        destination: ``
-      });
-    }
+    this.updateData({
+      destination: availableDestination.has(evt.target.value) ? evt.target.value : ``
+    });
+
   }
 
   _favoriteClickHandler(evt) {

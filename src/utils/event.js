@@ -43,6 +43,6 @@ export const sortByPrice = (eventA, eventB) => {
   return eventB.price - eventA.price;
 };
 
-export const isEqual = (a, b) => {
-  return (a === b) ? true : false;
+export const isEqual = (valueA, valueB) => {
+  return valueA === valueB;
 };
