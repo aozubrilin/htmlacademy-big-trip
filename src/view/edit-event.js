@@ -330,7 +330,7 @@ export default class EditEvent extends SmartView {
       update.push({
         lable: evt.target.dataset.lable,
         title: evt.target.dataset.title,
-        price: evt.target.dataset.price
+        price: +evt.target.dataset.price
       });
 
       this.updateData({
@@ -377,7 +377,7 @@ export default class EditEvent extends SmartView {
 
   _priceChangeHandler(evt) {
     evt.preventDefault();
-    const update = isNaN(evt.target.value) || evt.target.value === `` ? 0 : evt.target.value;
+    const update = isNaN(evt.target.value) || evt.target.value === `` ? 0 : +evt.target.value;
 
     this.updateData({
       price: update

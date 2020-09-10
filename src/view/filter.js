@@ -1,4 +1,4 @@
-import AbstractView from './abstract.js';
+import AbstractView from "./abstract.js";
 
 const createFiterItemsTemlate = (filters, currentFilterType) => {
   return filters

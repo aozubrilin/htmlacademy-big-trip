@@ -1,10 +1,10 @@
-import TripInfoView from "./view/trip-info.js";
 import SiteMenuView from "./view/site-menu.js";
+import TripInfoPresenter from "./presenter/trip-info.js";
 import TripPresenter from "./presenter/trip.js";
 import FilterPresenter from "./presenter/filter.js";
-import EventsModel from './model/events.js';
+import EventsModel from "./model/events.js";
 import OffersModel from './model/offers.js';
-import DestinationsModel from './model/destinations.js';
+import DestinationsModel from "./model/destinations.js";
 import FilterModel from "./model/filter.js";
 import {generateEvents} from "./mock/event.js";
 import {generateAddOptions} from "./mock/offers.js";
@@ -12,12 +12,11 @@ import {generateDestinations} from "./mock/destination.js";
 import {render, RenderPosition} from "./utils/render.js";
 
 export const mockOptions = generateAddOptions();
-const mockDestinations = generateDestinations();
 
 const ROUTE_POINT_COUNT = 20;
 
 const events = new Array(ROUTE_POINT_COUNT).fill().map(generateEvents);
-const sortedEvents = events.slice().sort((current, next) => current.dateStart - next.dateStart);
+const mockDestinations = generateDestinations();
 
 const siteBodyElement = document.querySelector(`.page-body`);
 const tripMainContainer = siteBodyElement.querySelector(`.trip-main`);
@@ -35,12 +34,14 @@ offersModel.setOffers(mockOptions);
 const destinationsModel = new DestinationsModel();
 destinationsModel.setDestinations(mockDestinations);
 
-render(tripMainContainer, new TripInfoView(sortedEvents), RenderPosition.AFTERBEGIN);
+
 render(tripMenu.querySelector(`h2`), new SiteMenuView(), RenderPosition.AFTEREND);
 
+const tripInfoPresenter = new TripInfoPresenter(tripMainContainer, eventsModel);
 const tripPresenter = new TripPresenter(tripEventsContainer, eventsModel, offersModel, destinationsModel, filterModel);
 const filterPresenter = new FilterPresenter(tripMenu, filterModel);
 
+tripInfoPresenter.init();
 filterPresenter.init();
 tripPresenter.init();
 
