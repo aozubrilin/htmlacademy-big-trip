@@ -11,14 +11,17 @@ export default class EventNew {
     this._destinationsModel = destinationsModel;
 
     this._eventEditComponent = null;
+    this._destroyCallback = null;
 
     this._handleFormSubmit = this._handleFormSubmit.bind(this);
     this._handleDeleteClick = this._handleDeleteClick.bind(this);
     this._escKeyDownHandler = this._escKeyDownHandler.bind(this);
   }
 
-  init() {
-    if (this._eventEditComponent !== null) {
+  init(callback) {
+    this._destroyCallback = callback;
+
+    if (this._eventEditComponent) {
       return;
     }
 
@@ -34,6 +37,10 @@ export default class EventNew {
   destroy() {
     if (this._eventEditComponent === null) {
       return;
+    }
+
+    if (this._destroyCallback !== null) {
+      this._destroyCallback();
     }
 
     remove(this._eventEditComponent);

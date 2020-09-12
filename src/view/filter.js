@@ -1,4 +1,4 @@
-import AbstractView from './abstract.js';
+import AbstractView from "./abstract.js";
 
 const createFiterItemsTemlate = (filters, currentFilterType) => {
   return filters
@@ -36,13 +36,14 @@ export default class Filter extends AbstractView {
     );
   }
 
+  setFilterTypeChangeHandler(callback) {
+    this._callback.filterTypeChange = callback;
+    this.getElement().addEventListener(`change`, this._filterTypeChangeHandler);
+  }
+
   _filterTypeChangeHandler(evt) {
     evt.preventDefault();
     this._callback.filterTypeChange(evt.target.value);
   }
 
-  setFilterTypeChangeHandler(callback) {
-    this._callback.filterTypeChange = callback;
-    this.getElement().addEventListener(`change`, this._filterTypeChangeHandler);
-  }
 }
