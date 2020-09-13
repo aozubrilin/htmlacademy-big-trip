@@ -2,16 +2,16 @@ import {EVENT_TYPES} from "../const.js";
 import moment from 'moment';
 
 const TripPointType = {
-  TAXI: `Taxi`,
-  BUS: `Bus`,
-  TRAIN: `Train`,
-  SHIP: `Ship`,
-  TRANSPORT: `Transport`,
-  DRIVE: `Drive`,
-  FLIGHT: `Flight`,
-  CHECK: `Check-in`,
-  SIGHTSEEING: `Sightseeing`,
-  RESTAURANT: `Restaurant`
+  TAXI: `taxi`,
+  BUS: `bus`,
+  TRAIN: `train`,
+  SHIP: `ship`,
+  TRANSPORT: `transport`,
+  DRIVE: `drive`,
+  FLIGHT: `flight`,
+  CHECK: `check-in`,
+  SIGHTSEEING: `sightseeing`,
+  RESTAURANT: `restaurant`
 };
 
 const getDuration = (events) => {

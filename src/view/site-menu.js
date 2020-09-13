@@ -24,11 +24,6 @@ export default class SiteMenu extends AbstractView {
     this.getElement().addEventListener(`click`, this._menuClickHandler);
   }
 
-  _menuClickHandler(evt) {
-    evt.preventDefault();
-    this._callback.menuClick(evt.target.dataset.title);
-  }
-
   setMenuItem(menuItem) {
     const menuItems = this.getElement().querySelectorAll(`.trip-tabs__btn`);
 
@@ -42,5 +37,10 @@ export default class SiteMenu extends AbstractView {
     if (currentActiveMenuItem) {
       currentActiveMenuItem.classList.add(ACTIVE_CLASS);
     }
+  }
+
+  _menuClickHandler(evt) {
+    evt.preventDefault();
+    this._callback.menuClick(evt.target.dataset.title);
   }
 }
