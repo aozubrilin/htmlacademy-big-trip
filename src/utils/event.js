@@ -50,5 +50,3 @@ export const isEqual = (valueA, valueB) => {
 export const transformToFirstCapitalize = (word) => {
   return word[0].toUpperCase() + word.slice(1).toLowerCase();
 };
-
-export const generateId = () => Date.now() + parseInt(Math.random() * 10000, 10);

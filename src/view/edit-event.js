@@ -15,7 +15,7 @@ const BLANK_EVENT = {
   dateStart: new Date(),
   dateEnd: new Date(),
   price: 0,
-  offers: [],
+  offers: [{title: ``, price: 0}],
   isFavorite: false
 };
 
@@ -42,7 +42,7 @@ const getCurrentOffers = (offers) => {
   return currentOffersTitle;
 };
 
-const createOfferItemsTemplate = (options, eventType, event) => {
+const createOfferItemsTemplate = (options, eventType, event, isDisabled) => {
   const currentOffers = getCurrentOffers(event.offers);
 
   return options
@@ -53,7 +53,9 @@ const createOfferItemsTemplate = (options, eventType, event) => {
       return (`<div class="event__offer-selector">
                           <input class="event__offer-checkbox  visually-hidden" id="event-offer-${id}-${event.id}"
                             type="checkbox" name="event-offer-${id}" data-title="${it.title}"
-                            data-price="${it.price}" ${currentOffers.has(it.title) ? `checked` : ``}>
+                            data-price="${it.price}" ${currentOffers.has(it.title) ? `checked` : ``}
+                            ${isDisabled ? `disabled` : ``}
+                            >
                            <label class="event__offer-label" for="event-offer-${id}-${event.id}">
                             <span class="event__offer-title">${it.title}</span>
                             &plus;
@@ -63,10 +65,10 @@ const createOfferItemsTemplate = (options, eventType, event) => {
     }).join(`\n`);
 };
 
-const createOffersTemplate = (offers, eventType, event) => {
+const createOffersTemplate = (offers, eventType, event, isDisabled) => {
   return `<section class="event__section  event__section--offers">
             <h3 class="event__section-title  event__section-title--offers">Offers</h3>
-            <div class="event__available-offers">${createOfferItemsTemplate(offers, eventType, event)}</div>
+            <div class="event__available-offers">${createOfferItemsTemplate(offers, eventType, event, isDisabled)}</div>
           </section>`;
 };
 
@@ -96,14 +98,14 @@ const createDestinationInfoTemplate = (destination, items) => {
 };
 
 const createEventEditTemplate = (options, destinations, event, isNewEvent) => {
-  const {price, dateStart, dateEnd, isFavorite, type, destination} = event;
+  const {id, price, dateStart, dateEnd, isFavorite, type, destination, isDisabled, isSaving, isDeleting} = event;
   const transferListTemplate = createTypeListTemplate(EVENT_TYPES.transfers, type);
   const actionsListTemplate = createTypeListTemplate(EVENT_TYPES.actions, type);
   const eventTitleType = createEventTitleType(type);
   const destinationListTemplate = createDestinationListTemplate(destinations);
 
   const lengthAddOptionsForType = options.find((offer) => offer.type === type).offers.length;
-  const offersTemplate = createOffersTemplate(options, type, event);
+  const offersTemplate = createOffersTemplate(options, type, event, isDisabled);
   const startTime = getDateThroughSlahs(dateStart);
   const endTime = getDateThroughSlahs(dateEnd);
   const checkedisFavorite = (!isFavorite) ? `` : `checked`;
@@ -112,11 +114,16 @@ const createEventEditTemplate = (options, destinations, event, isNewEvent) => {
     `<form class="trip-events__item event  event--edit" action="#" method="post">
       <header class="event__header">
         <div class="event__type-wrapper">
-          <label class="event__type  event__type-btn" for="event-type-toggle-1">
+          <label class="event__type  event__type-btn" for="event-type-toggle-${id}">
             <span class="visually-hidden">Choose event type</span>
             <img class="event__type-icon" width="17" height="17" src="img/icons/${type}.png" alt="Event ${type} icon">
           </label>
-          <input class="event__type-toggle  visually-hidden" id="event-type-toggle-1" type="checkbox">
+          <input
+          class="event__type-toggle  visually-hidden"
+          id="event-type-toggle-${id}"
+          type="checkbox"
+          ${isDisabled ? `disabled` : ``}
+        >
 
           <div class="event__type-list">
          <fieldset class="event__type-group">
@@ -144,12 +151,27 @@ const createEventEditTemplate = (options, destinations, event, isNewEvent) => {
           <label class="visually-hidden" for="event-start-time-1">
             From
           </label>
-          <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${startTime}">
+          <input
+          class="event__input  event__input--time"
+          id="event-start-time-${id}"
+          type="text" name="event-start-time"
+          value="${startTime}"
+          required
+          ${isDisabled ? `disabled` : ``}
+        >
           &mdash;
           <label class="visually-hidden" for="event-end-time-1">
             To
           </label>
-          <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${endTime}">
+          <input
+          class="event__input  event__input--time"
+          id="event-end-time-${id}"
+          type="text"
+          name="event-end-time"
+          value="${endTime}"
+          required
+          ${isDisabled ? `disabled` : ``}
+        >
         </div>
 
         <div class="event__field-group  event__field-group--price">
@@ -157,11 +179,22 @@ const createEventEditTemplate = (options, destinations, event, isNewEvent) => {
             <span class="visually-hidden">Price</span>
             &euro;
           </label>
-          <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${he.encode(price.toString())}">
+          <input
+          class="event__input  event__input--price"
+          id="event-price-${id}"
+          type="text"
+          name="event-price"
+          value="${he.encode(price.toString())}"
+          ${isDisabled ? `disabled` : ``}
+        >
         </div>
 
-        <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
-        <button class="event__reset-btn" type="reset">${isNewEvent ? `Cancel` : `Delete`}</button>
+        <button class="event__save-btn  btn  btn--blue" type="submit" ${isDisabled ? `disabled` : ``}>
+          ${isSaving ? `Saving` : `Save`}
+        </button>
+        <button class="event__reset-btn" type="reset" ${isDisabled ? `disabled` : ``}>
+          ${isNewEvent ? `Cancel` : `${isDeleting ? `Deleting` : `Delete`}`}
+        </button>
 
       ${!isNewEvent ? `<input id="event-favorite-1" class="event__favorite-checkbox  visually-hidden" type="checkbox" name="event-favorite" ${checkedisFavorite}>
         <label class="event__favorite-btn" for="event-favorite-1">
@@ -386,10 +419,20 @@ export default class EditEvent extends SmartView {
   }
 
   static parseEventToData(event) {
-    return Object.assign({}, event);
+    return Object.assign({}, event, {
+      isDisabled: false,
+      isSaving: false,
+      isDeleting: false
+    });
   }
 
   static parseDataToEvent(data) {
-    return Object.assign({}, data);
+    data = Object.assign({}, data);
+
+    delete data.isDisabled;
+    delete data.isSaving;
+    delete data.isDeleting;
+
+    return data;
   }
 }
