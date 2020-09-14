@@ -1,6 +1,6 @@
 import he from "he";
 import AbstractView from "./abstract.js";
-import {getISODateTime, getDuration, createEventTitleType} from "../utils/event.js";
+import {getISODateTime, getDuration, createEventTitleType, transformToFirstCapitalize} from "../utils/event.js";
 
 const QuantityDisplayedOffers = {
   MAX: 3,
@@ -28,9 +28,9 @@ const createEventTemplate = (event) => {
     `<li class="trip-events__item">
     <div class="event">
       <div class="event__type">
-        <img class="event__type-icon" width="42" height="42" src="img/icons/${type.toLowerCase()}.png" alt="Event ${type.toLowerCase()} icon">
+        <img class="event__type-icon" width="42" height="42" src="img/icons/${type}.png" alt="Event ${type} icon">
       </div>
-      <h3 class="event__title">${eventTitleType} ${destination}</h3>
+      <h3 class="event__title">${transformToFirstCapitalize(eventTitleType)} ${destination.name}</h3>
 
       <div class="event__schedule">
         <p class="event__time">
@@ -62,7 +62,6 @@ export default class Event extends AbstractView {
   constructor(event) {
     super();
     this._event = event;
-
     this._rollupClickHandler = this._rollupClickHandler.bind(this);
   }
 

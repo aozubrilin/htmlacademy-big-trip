@@ -1,14 +1,15 @@
 import EditEventView from "../view/edit-event.js";
-import {generateId} from "../mock/event.js";
+import {generateId} from "../utils/event.js";
 import {remove, render, RenderPosition} from "../utils/render.js";
 import {UserAction, UpdateType} from "../const.js";
 
 export default class EventNew {
-  constructor(eventListContainer, changeData, offersModel, destinationsModel) {
+  constructor(eventListContainer, changeData, offersModel, destinationsModel, addNewButtonComponent) {
     this._eventListContainer = eventListContainer;
     this._changeData = changeData;
     this._offersModel = offersModel;
     this._destinationsModel = destinationsModel;
+    this._addNewButtonComponent = addNewButtonComponent;
 
     this._eventEditComponent = null;
     this._destroyCallback = null;
@@ -18,8 +19,7 @@ export default class EventNew {
     this._escKeyDownHandler = this._escKeyDownHandler.bind(this);
   }
 
-  init(callback) {
-    this._destroyCallback = callback;
+  init() {
 
     if (this._eventEditComponent) {
       return;
@@ -39,10 +39,7 @@ export default class EventNew {
       return;
     }
 
-    if (this._destroyCallback !== null) {
-      this._destroyCallback();
-    }
-
+    this._addNewButtonComponent.disabledButton();
     remove(this._eventEditComponent);
     this._eventEditComponent = null;
 

@@ -1,14 +1,17 @@
 import he from "he";
 import SmartView from "./smart.js";
-import {EVENT_TYPES, Destination} from "../const.js";
-import {getDateThroughSlahs, createEventTitleType} from "../utils/event.js";
+import {EVENT_TYPES} from "../const.js";
+import {getDateThroughSlahs, createEventTitleType, transformToFirstCapitalize} from "../utils/event.js";
 import flatpickr from "flatpickr";
-
 import "../../node_modules/flatpickr/dist/flatpickr.min.css";
 
 const BLANK_EVENT = {
-  type: `Taxi`,
-  destination: `Chamonix`,
+  type: EVENT_TYPES.transfers[0],
+  destination: {
+    name: ``,
+    description: ``,
+    pictures: []
+  },
   dateStart: new Date(),
   dateEnd: new Date(),
   price: 0,
@@ -18,16 +21,16 @@ const BLANK_EVENT = {
 
 const createTypeListTemplate = (types, currentType) => {
   return types.map((type, index) => `<div class="event__type-item">
-      <input id="event-type-${type.toLowerCase()}-${index + 1}" class="event__type-input  visually-hidden" type="radio"
-      name="event-type" value="${type.toLowerCase()}" data-type="${type}" ${currentType === type ? `checked` : ``}>
-      <label class="event__type-label  event__type-label--${type.toLowerCase()}"
-      for="event-type-${type.toLowerCase()}-${index + 1}">${type}</label>
+      <input id="event-type-${type}-${index + 1}" class="event__type-input  visually-hidden" type="radio"
+      name="event-type" value="${type}" data-type="${type}" ${currentType === type ? `checked` : ``}>
+      <label class="event__type-label  event__type-label--${type}"
+      for="event-type-${type}-${index + 1}">${transformToFirstCapitalize(type)}</label>
       </div>`).join(`\n`);
 };
 
 const createDestinationListTemplate = (destinations) => {
 
-  return destinations.map((item) => `<option value="${item}"></option>`).join(``);
+  return destinations.map((item) =>`<option value="${item.name}"></option>`).join(``);
 };
 
 const getCurrentOffers = (offers) => {
@@ -41,15 +44,17 @@ const getCurrentOffers = (offers) => {
 
 const createOfferItemsTemplate = (options, eventType, event) => {
   const currentOffers = getCurrentOffers(event.offers);
+
   return options
     .find((offer) => offer.type === eventType)
-    .offers.map((it, index) => {
+    .offers.map((it) => {
+      const id = it.title.toLowerCase().split(` `).join(`-`);
 
       return (`<div class="event__offer-selector">
-                          <input class="event__offer-checkbox  visually-hidden" id="event-offer-${it.lable}-${index + 1}"
-                            type="checkbox" name="event-offer-${it.lable}" data-lable="${it.lable}" data-title="${it.title}"
+                          <input class="event__offer-checkbox  visually-hidden" id="event-offer-${id}-${event.id}"
+                            type="checkbox" name="event-offer-${id}" data-title="${it.title}"
                             data-price="${it.price}" ${currentOffers.has(it.title) ? `checked` : ``}>
-                           <label class="event__offer-label" for="event-offer-${it.lable}-${index + 1}">
+                           <label class="event__offer-label" for="event-offer-${id}-${event.id}">
                             <span class="event__offer-title">${it.title}</span>
                             &plus;
                             &euro;&nbsp;<span class="event__offer-price">${it.price}</span>
@@ -59,7 +64,6 @@ const createOfferItemsTemplate = (options, eventType, event) => {
 };
 
 const createOffersTemplate = (offers, eventType, event) => {
-
   return `<section class="event__section  event__section--offers">
             <h3 class="event__section-title  event__section-title--offers">Offers</h3>
             <div class="event__available-offers">${createOfferItemsTemplate(offers, eventType, event)}</div>
@@ -67,21 +71,22 @@ const createOffersTemplate = (offers, eventType, event) => {
 };
 
 const isDestinationsAvailable = (destination) => {
-  return destination !== ``;
+
+  return destination !== null && destination.name !== ``;
 };
 
 const createDestinationInfoTemplate = (destination, items) => {
-  const currentDestination = items.find((it) => it.city === destination);
+  const currentDestination = items.find((it) => it.name === destination);
 
   const getPhotoTemplate = () => {
-    return currentDestination.destinationInfo.photos.length
-      ? currentDestination.destinationInfo.photos
-        .map((photo) => `<img class="event__photo" ${photo} alt="Event photo"></img>`).join(`\n`) : ``;
+    return currentDestination.pictures.length
+      ? (currentDestination.pictures)
+        .map((picture) => `<img class="event__photo" src="${picture.src}" alt="${picture.description}"></img>`).join(`\n`) : ``;
   };
 
   return `<section class="event__section  event__section--destination">
   <h3 class="event__section-title  event__section-title--destination">Destination</h3>
-  <p class="event__destination-description">${currentDestination.destinationInfo.description}</p>
+  <p class="event__destination-description">${currentDestination.description}</p>
   <div class="event__photos-container">
     <div class="event__photos-tape">
     ${getPhotoTemplate()}
@@ -95,7 +100,8 @@ const createEventEditTemplate = (options, destinations, event, isNewEvent) => {
   const transferListTemplate = createTypeListTemplate(EVENT_TYPES.transfers, type);
   const actionsListTemplate = createTypeListTemplate(EVENT_TYPES.actions, type);
   const eventTitleType = createEventTitleType(type);
-  const destinationListTemplate = createDestinationListTemplate(Destination.CITIES);
+  const destinationListTemplate = createDestinationListTemplate(destinations);
+
   const lengthAddOptionsForType = options.find((offer) => offer.type === type).offers.length;
   const offersTemplate = createOffersTemplate(options, type, event);
   const startTime = getDateThroughSlahs(dateStart);
@@ -108,7 +114,7 @@ const createEventEditTemplate = (options, destinations, event, isNewEvent) => {
         <div class="event__type-wrapper">
           <label class="event__type  event__type-btn" for="event-type-toggle-1">
             <span class="visually-hidden">Choose event type</span>
-            <img class="event__type-icon" width="17" height="17" src="img/icons/${type.toLowerCase()}.png" alt="Event ${type.toLowerCase()} icon">
+            <img class="event__type-icon" width="17" height="17" src="img/icons/${type}.png" alt="Event ${type} icon">
           </label>
           <input class="event__type-toggle  visually-hidden" id="event-type-toggle-1" type="checkbox">
 
@@ -126,9 +132,9 @@ const createEventEditTemplate = (options, destinations, event, isNewEvent) => {
 
         <div class="event__field-group  event__field-group--destination">
           <label class="event__label  event__type-output" for="event-destination-1">
-          ${eventTitleType}
+          ${transformToFirstCapitalize(eventTitleType)}
           </label>
-          <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${destination}" list="destination-list-1">
+          <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${destination ? destination.name : ``}" list="destination-list-1">
           <datalist id="destination-list-1">
           ${destinationListTemplate}
           </datalist>
@@ -169,12 +175,11 @@ const createEventEditTemplate = (options, destinations, event, isNewEvent) => {
           <span class="visually-hidden">Open event</span>
         </button>`
       : ``}
-
       </header>
 
       <section class="event__details">
          ${lengthAddOptionsForType ? offersTemplate : ``}
-         ${isDestinationsAvailable(destination) ? createDestinationInfoTemplate(destination, destinations) : ``}
+         ${isDestinationsAvailable(destination, destinations) ? createDestinationInfoTemplate(destination.name, destinations) : ``}
       </section>
     </form>`
   );
@@ -188,7 +193,6 @@ export default class EditEvent extends SmartView {
     this._destinationsModel = destinationsModel;
     this._isNewEvent = isNewEvent;
     this._datepickers = null;
-
     this._submitForm = this._submitForm.bind(this);
     this._formDeleteClickHandler = this._formDeleteClickHandler.bind(this);
     this._favoriteClickHandler = this._favoriteClickHandler.bind(this);
@@ -197,7 +201,6 @@ export default class EditEvent extends SmartView {
     this._dateChangeHandler = this._dateChangeHandler.bind(this);
     this._priceChangeHandler = this._priceChangeHandler.bind(this);
     this._offerChangeHandler = this._offerChangeHandler.bind(this);
-
     this._setInnerHandlers();
     this._setDatePicker();
   }
@@ -213,7 +216,6 @@ export default class EditEvent extends SmartView {
   getTemplate() {
     const destinations = this._destinationsModel.getDestinations();
     const offers = this._offersModel.getOffers();
-
     return createEventEditTemplate(offers, destinations, this._data, this._isNewEvent);
   }
 
@@ -305,13 +307,13 @@ export default class EditEvent extends SmartView {
     const availableDestination = new Set();
     const destinations = this._destinationsModel.getDestinations();
     for (const destination of destinations) {
-      availableDestination.add(destination.city);
+      availableDestination.add(destination.name);
     }
+    const update = destinations.filter((destination) => destination.name === evt.target.value)[0];
 
     this.updateData({
-      destination: availableDestination.has(evt.target.value) ? evt.target.value : ``
+      destination: availableDestination.has(evt.target.value) ? update : null
     });
-
   }
 
   _favoriteClickHandler(evt) {
@@ -328,7 +330,6 @@ export default class EditEvent extends SmartView {
     let update = this._data.offers;
     if (evt.target.checked) {
       update.push({
-        lable: evt.target.dataset.lable,
         title: evt.target.dataset.title,
         price: +evt.target.dataset.price
       });

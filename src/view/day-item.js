@@ -9,7 +9,6 @@ const createDayInfoTemplate = (day, index) => {
 };
 
 const createDayItemTemplate = (day, index) => {
-
   const dayInfo = day !== null ? createDayInfoTemplate(day, index) : ``;
 
   return (
