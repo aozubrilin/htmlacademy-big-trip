@@ -15,12 +15,6 @@ export default class AddNewButton extends SmartView {
     );
   }
 
-  _clickNewButtonHandler(evt) {
-    evt.preventDefault();
-    this._callback.buttonClick();
-    this.updateData({isEnabled: !this._data.isEnabled}, false);
-  }
-
   restoreHandlers() {
     this.getElement().addEventListener(`click`, this._clickNewButtonHandler);
   }
@@ -34,5 +28,11 @@ export default class AddNewButton extends SmartView {
   setClickHandler(callback) {
     this._callback.buttonClick = callback;
     this.getElement().addEventListener(`click`, this._clickNewButtonHandler);
+  }
+
+  _clickNewButtonHandler(evt) {
+    evt.preventDefault();
+    this._callback.buttonClick();
+    this.updateData({isEnabled: !this._data.isEnabled}, false);
   }
 }
