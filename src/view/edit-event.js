@@ -15,7 +15,7 @@ const BLANK_EVENT = {
   dateStart: new Date(),
   dateEnd: new Date(),
   price: 0,
-  offers: [{title: ``, price: 0}],
+  offers: [],
   isFavorite: false
 };
 
@@ -39,6 +39,7 @@ const getCurrentOffers = (offers) => {
   for (const offer of offers) {
     currentOffersTitle.add(offer.title);
   }
+
   return currentOffersTitle;
 };
 
@@ -73,8 +74,12 @@ const createOffersTemplate = (offers, eventType, event, isDisabled) => {
 };
 
 const isDestinationsAvailable = (destination) => {
-
   return destination !== null && destination.name !== ``;
+};
+
+const isDetailsAvailable = (isDestinationTemplateAvailable, isOfferTemplateAvailable) => {
+
+  return isDestinationTemplateAvailable || isOfferTemplateAvailable;
 };
 
 const createDestinationInfoTemplate = (destination, items) => {
@@ -103,7 +108,7 @@ const createEventEditTemplate = (options, destinations, event, isNewEvent) => {
   const actionsListTemplate = createTypeListTemplate(EVENT_TYPES.actions, type);
   const eventTitleType = createEventTitleType(type);
   const destinationListTemplate = createDestinationListTemplate(destinations);
-
+  const isDestinationTemplateAvailable = isDestinationsAvailable(destination, destinations);
   const lengthAddOptionsForType = options.find((offer) => offer.type === type).offers.length;
   const offersTemplate = createOffersTemplate(options, type, event, isDisabled);
   const startTime = getDateThroughSlahs(dateStart);
@@ -210,10 +215,14 @@ const createEventEditTemplate = (options, destinations, event, isNewEvent) => {
       : ``}
       </header>
 
-      <section class="event__details">
-         ${lengthAddOptionsForType ? offersTemplate : ``}
-         ${isDestinationsAvailable(destination, destinations) ? createDestinationInfoTemplate(destination.name, destinations) : ``}
-      </section>
+      ${isDetailsAvailable(isDestinationTemplateAvailable, lengthAddOptionsForType) ?
+      `<section class="event__details">
+        ${lengthAddOptionsForType ? offersTemplate : ``}
+        ${isDestinationTemplateAvailable ? createDestinationInfoTemplate(destination.name, destinations) : ``}
+     </section>`
+      : ``}
+
+
     </form>`
   );
 };
@@ -360,7 +369,7 @@ export default class EditEvent extends SmartView {
     }
 
     evt.preventDefault();
-    let update = this._data.offers;
+    let update = this._data.offers.slice();
     if (evt.target.checked) {
       update.push({
         title: evt.target.dataset.title,
@@ -379,7 +388,6 @@ export default class EditEvent extends SmartView {
       });
     }
   }
-
 
   setFavoriteClickHandler(callback) {
     this._callback.favoriteClick = callback;

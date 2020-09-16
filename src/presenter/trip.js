@@ -34,7 +34,7 @@ export default class Trip {
     this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
     this._handleModeChange = this._handleModeChange.bind(this);
 
-    this._eventNewPresenter = new EventNewPresenter(this._daysComponent, this._handleViewAction, this._offersModel, this._destinationsModel, addNewButtonComponent);
+    this._eventNewPresenter = new EventNewPresenter(this._handleViewAction, this._offersModel, this._destinationsModel, addNewButtonComponent);
   }
 
   init() {
@@ -56,9 +56,10 @@ export default class Trip {
 
     if (!this._eventsModel.getEvents().length) {
       remove(this._noEventComponent);
+      this._eventNewPresenter.init(this._tripContainer);
+    } else {
+      this._eventNewPresenter.init(this._daysComponent);
     }
-
-    this._eventNewPresenter.init();
   }
 
   _getEvents() {
