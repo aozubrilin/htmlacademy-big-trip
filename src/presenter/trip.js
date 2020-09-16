@@ -44,7 +44,7 @@ export default class Trip {
   }
 
   destroy() {
-    this._clearTrip();
+    this._clearTrip(true);
 
     this._eventsModel.removeObserver(this._handleModelEvent);
     this._filterModel.removeObserver(this._handleModelEvent);
@@ -122,7 +122,7 @@ export default class Trip {
         this._renderTrip();
         break;
       case UpdateType.MAJOR:
-        this._clearTrip();
+        this._clearTrip(true);
         this._renderTrip();
         break;
       case UpdateType.INIT:
@@ -236,16 +236,20 @@ export default class Trip {
     render(this._tripContainer, this._noEventComponent, RenderPosition.BEFOREEND);
   }
 
-  _clearTrip() {
+  _clearTrip(resetSortType = false) {
+
     Object
       .values(this._eventPresenter)
       .forEach((presenter) => presenter.destroy());
     this._eventPresenter = {};
-
     remove(this._sortComponent);
     remove(this._noEventComponent);
     remove(this._daysComponent);
     remove(this._loadingComponent);
     this._eventNewPresenter.destroy();
+
+    if (resetSortType) {
+      this._currentSortType = SortType.DEFAULT;
+    }
   }
 }

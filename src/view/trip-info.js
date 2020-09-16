@@ -1,11 +1,29 @@
 import AbstractView from "./abstract.js";
 import {getShortDate} from "../utils/event.js";
 
+const MAX_COUNT_CITYES = 3;
+
 const getDateTemplate = (events, sortedEventsByDateEnd) => {
   const dateStart = getShortDate(events[0].dateStart);
   const dateEnd = getShortDate(sortedEventsByDateEnd[events.length - 1].dateEnd);
 
   return `<p class="trip-info__dates">${dateStart}&nbsp;&mdash;&nbsp;${dateEnd}</p>`;
+};
+
+const getRoute = (events) => {
+  const route = [];
+
+  for (const event of events) {
+    if (route[route.length - 1] !== event.destination.name) {
+      route.push(event.destination.name);
+    }
+
+    if (route.length > MAX_COUNT_CITYES) {
+      return `${events[0].destination.name} &mdash; ... &mdash; ${events[events.length - 1].destination.name}`;
+    }
+  }
+
+  return route.join(` &mdash; `);
 };
 
 const getCost = (events) => events.reduce((eventsPrice, event) =>
@@ -35,7 +53,7 @@ export default class TripInfo extends AbstractView {
     return (
       `<section class="trip-main__trip-info  trip-info">
         <div class="trip-info__main">
-          <h1 class="trip-info__title">@@@Chtobi Ne Zabil@@@</h1>
+          <h1 class="trip-info__title">${getRoute(this._events)}</h1>
           ${getDateTemplate(this._events, sortedEventsByDateEnd)}
         </div>
         <p class="trip-info__cost">

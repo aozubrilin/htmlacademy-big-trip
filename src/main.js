@@ -9,12 +9,13 @@ import OffersModel from "./model/offers.js";
 import DestinationsModel from "./model/destinations.js";
 import FilterModel from "./model/filter.js";
 import {render, RenderPosition, remove} from "./utils/render.js";
+import {getRandomString} from "./utils/common.js";
 import {MenuItem, UpdateType, FilterType} from "./const.js";
 import Api from "./api/index.js";
 import Store from "./api/store.js";
 import Provider from "./api/provider.js";
 
-const AUTHORIZATION = `Basic h34wrq45643`;
+const AUTHORIZATION_KEY_LENGTH = 12;
 const END_POINT = `https://12.ecmascript.pages.academy/big-trip`;
 const STORE_PREFIX = `bigtrip-localstorage`;
 const STORE_VER = `v12`;
@@ -65,7 +66,9 @@ const enableMenu = () => {
   siteMenuComponent.setMenuItem(MenuItem.TABLE);
 };
 
-const api = new Api(END_POINT, AUTHORIZATION);
+const autorization = `Basic ` + getRandomString(AUTHORIZATION_KEY_LENGTH);
+
+const api = new Api(END_POINT, autorization);
 const store = new Store(STORE_NAME, window.localStorage);
 const apiWithProvider = new Provider(api, store);
 
