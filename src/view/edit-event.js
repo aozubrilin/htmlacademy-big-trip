@@ -5,6 +5,12 @@ import {getDateThroughSlahs, createEventTitleType, transformToFirstCapitalize} f
 import flatpickr from "flatpickr";
 import "../../node_modules/flatpickr/dist/flatpickr.min.css";
 
+const FLATPICKR_PROPERTIES = {
+  'time_24hr': true,
+  'dateFormat': `d/m/Y H:i`,
+  'enableTime': true,
+};
+
 const BLANK_EVENT = {
   type: EVENT_TYPES.transfers[0],
   destination: {
@@ -269,27 +275,25 @@ export default class EditEvent extends SmartView {
 
     const eventStartTime = flatpickr(
         this.getElement().querySelector(`.event__input--time[name="event-start-time"]`),
-        {
-          enableTime: true,
-          // eslint-disable-next-line camelcase
-          time_24hr: true,
-          dateFormat: `d/m/Y H:i`,
-          defaultDate: this._data.dateStart,
-          onChange: this._dateChangeHandler
-        }
+        Object.assign(
+            {
+              defaultDate: this._data.dateStart,
+              onChange: this._dateChangeHandler
+            },
+            FLATPICKR_PROPERTIES
+        )
     );
 
     const eventEndTime = flatpickr(
         this.getElement().querySelector(`.event__input--time[name="event-end-time"]`),
-        {
-          enableTime: true,
-          // eslint-disable-next-line camelcase
-          time_24hr: true,
-          dateFormat: `d/m/Y H:i`,
-          defaultDate: this._data.dateEnd,
-          minDate: this._data.dateStart,
-          onChange: this._dateChangeHandler
-        }
+        Object.assign(
+            {
+              defaultDate: this._data.dateEnd,
+              minDate: this._data.dateStart,
+              onChange: this._dateChangeHandler
+            },
+            FLATPICKR_PROPERTIES
+        )
     );
 
     this._datepickers = [eventStartTime, eventEndTime];
@@ -303,11 +307,16 @@ export default class EditEvent extends SmartView {
           dateStart: userDate,
           dateEnd: userDate
         }, true);
-      }
 
-      this.updateData({
-        dateStart: userDate
-      }, true);
+        this._datepickers[1].set(`minDate`, userDate);
+        this._datepickers[1].setDate(userDate);
+
+      } else {
+        this.updateData({
+          dateStart: userDate
+        }, true);
+        this._datepickers[1].set(`minDate`, userDate);
+      }
 
     } else {
       this.updateData({

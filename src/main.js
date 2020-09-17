@@ -82,7 +82,7 @@ const addNewButtonComponent = new AddNewButtonView(true);
 
 const tripInfoPresenter = new TripInfoPresenter(tripMainContainer, eventsModel);
 const tripPresenter = new TripPresenter(tripEventsContainer, eventsModel, offersModel, destinationsModel, filterModel, apiWithProvider, addNewButtonComponent);
-const filterPresenter = new FilterPresenter(tripMenu, filterModel);
+const filterPresenter = new FilterPresenter(tripMenu, filterModel, eventsModel);
 
 tripInfoPresenter.init();
 filterPresenter.init();
