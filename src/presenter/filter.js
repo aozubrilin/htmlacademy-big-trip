@@ -41,7 +41,6 @@ export default class Filter {
     this.init();
   }
 
-
   _handleFilterTypeChange(filterType) {
     if (this._currentFilter === filterType) {
       return;

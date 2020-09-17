@@ -250,15 +250,12 @@ export default class EditEvent extends SmartView {
     this._priceChangeHandler = this._priceChangeHandler.bind(this);
     this._offerChangeHandler = this._offerChangeHandler.bind(this);
     this._setInnerHandlers();
-    this._setDatePicker();
+    this._setDatePickers();
   }
 
   removeElement() {
     super.removeElement();
-    if (this._datepickers) {
-      this._datepickers.forEach((item) => item.destroy());
-      this._datepickers = null;
-    }
+    this._destroyDateDatepickers();
   }
 
   getTemplate() {
@@ -267,12 +264,15 @@ export default class EditEvent extends SmartView {
     return createEventEditTemplate(offers, destinations, this._data, this._isNewEvent);
   }
 
-  _setDatePicker() {
+  _destroyDateDatepickers() {
     if (this._datepickers) {
       this._datepickers.forEach((item) => item.destroy());
       this._datepickers = null;
     }
+  }
 
+  _setDatePickers() {
+    this._destroyDateDatepickers();
     const eventStartTime = flatpickr(
         this.getElement().querySelector(`.event__input--time[name="event-start-time"]`),
         Object.assign(
@@ -331,7 +331,7 @@ export default class EditEvent extends SmartView {
 
   restoreHandlers() {
     this._setInnerHandlers();
-    this._setDatePicker();
+    this._setDatePickers();
     this.setFavoriteClickHandler(this._callback.favoriteClick);
     this.setSubmitFormHandler(this._callback._submitForm);
     this.setDeleteClickHandler(this._callback.deleteClick);
