@@ -3,8 +3,9 @@ import {getShortDate} from "../utils/event.js";
 
 const MAX_COUNT_CITYES = 3;
 
-const getDateTemplate = (events, sortedEventsByDateEnd) => {
+const getDateTemplate = (events) => {
   const dateStart = getShortDate(events[0].dateStart);
+  const sortedEventsByDateEnd = events.sort((dateEndA, dateEndB) => dateEndA.dateEnd - dateEndB.dateEnd);
   const dateEnd = getShortDate(sortedEventsByDateEnd[events.length - 1].dateEnd);
 
   return `<p class="trip-info__dates">${dateStart}&nbsp;&mdash;&nbsp;${dateEnd}</p>`;
@@ -48,13 +49,11 @@ export default class TripInfo extends AbstractView {
       );
     }
 
-    const sortedEventsByDateEnd = this._events.sort((dateEndA, dateEndB) => dateEndA.dateEnd - dateEndB.dateEnd);
-
     return (
       `<section class="trip-main__trip-info  trip-info">
         <div class="trip-info__main">
           <h1 class="trip-info__title">${getRoute(this._events)}</h1>
-          ${getDateTemplate(this._events, sortedEventsByDateEnd)}
+          ${getDateTemplate(this._events)}
         </div>
         <p class="trip-info__cost">
           Total: &euro;&nbsp;<span class="trip-info__cost-value">${getCost(this._events)}</span>
