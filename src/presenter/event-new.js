@@ -3,8 +3,7 @@ import {remove, render, RenderPosition} from "../utils/render.js";
 import {UserAction, UpdateType} from "../const.js";
 
 export default class EventNew {
-  constructor(eventListContainer, changeData, offersModel, destinationsModel, addNewButtonComponent) {
-    this._eventListContainer = eventListContainer;
+  constructor(changeData, offersModel, destinationsModel, addNewButtonComponent) {
     this._changeData = changeData;
     this._offersModel = offersModel;
     this._destinationsModel = destinationsModel;
@@ -18,7 +17,7 @@ export default class EventNew {
     this._escKeyDownHandler = this._escKeyDownHandler.bind(this);
   }
 
-  init() {
+  init(eventListContainer) {
 
     if (this._eventEditComponent) {
       return;
@@ -28,7 +27,7 @@ export default class EventNew {
     this._eventEditComponent.setSubmitFormHandler(this._handleFormSubmit);
     this._eventEditComponent.setDeleteClickHandler(this._handleDeleteClick);
 
-    render(this._eventListContainer, this._eventEditComponent, RenderPosition.AFTERBEGIN);
+    render(eventListContainer, this._eventEditComponent, RenderPosition.AFTERBEGIN);
 
     document.addEventListener(`keydown`, this._escKeyDownHandler);
   }

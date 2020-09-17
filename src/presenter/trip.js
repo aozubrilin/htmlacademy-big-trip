@@ -34,7 +34,7 @@ export default class Trip {
     this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
     this._handleModeChange = this._handleModeChange.bind(this);
 
-    this._eventNewPresenter = new EventNewPresenter(this._daysComponent, this._handleViewAction, this._offersModel, this._destinationsModel, addNewButtonComponent);
+    this._eventNewPresenter = new EventNewPresenter(this._handleViewAction, this._offersModel, this._destinationsModel, addNewButtonComponent);
   }
 
   init() {
@@ -44,7 +44,7 @@ export default class Trip {
   }
 
   destroy() {
-    this._clearTrip();
+    this._clearTrip(true);
 
     this._eventsModel.removeObserver(this._handleModelEvent);
     this._filterModel.removeObserver(this._handleModelEvent);
@@ -56,9 +56,10 @@ export default class Trip {
 
     if (!this._eventsModel.getEvents().length) {
       remove(this._noEventComponent);
+      this._eventNewPresenter.init(this._tripContainer);
+    } else {
+      this._eventNewPresenter.init(this._daysComponent);
     }
-
-    this._eventNewPresenter.init();
   }
 
   _getEvents() {
@@ -121,7 +122,7 @@ export default class Trip {
         this._renderTrip();
         break;
       case UpdateType.MAJOR:
-        this._clearTrip();
+        this._clearTrip(true);
         this._renderTrip();
         break;
       case UpdateType.INIT:
@@ -235,16 +236,20 @@ export default class Trip {
     render(this._tripContainer, this._noEventComponent, RenderPosition.BEFOREEND);
   }
 
-  _clearTrip() {
+  _clearTrip(resetSortType = false) {
+
     Object
       .values(this._eventPresenter)
       .forEach((presenter) => presenter.destroy());
     this._eventPresenter = {};
-
     remove(this._sortComponent);
     remove(this._noEventComponent);
     remove(this._daysComponent);
     remove(this._loadingComponent);
     this._eventNewPresenter.destroy();
+
+    if (resetSortType) {
+      this._currentSortType = SortType.DEFAULT;
+    }
   }
 }
