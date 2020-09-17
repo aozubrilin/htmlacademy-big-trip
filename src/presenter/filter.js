@@ -1,11 +1,13 @@
 import FilterView from "../view/filter.js";
 import {render, RenderPosition, replace, remove} from "../utils/render.js";
-import {FilterType, UpdateType} from "../const.js";
+import {UpdateType} from "../const.js";
+import {filter} from "../utils/filter.js";
 
 export default class Filter {
-  constructor(filterContainer, filterModel) {
+  constructor(filterContainer, filterModel, eventsModel) {
     this._filterContainer = filterContainer;
     this._filterModel = filterModel;
+    this._eventsModel = eventsModel;
     this._currentFilter = null;
 
     this._filterComponent = null;
@@ -13,6 +15,7 @@ export default class Filter {
     this._handleModelEvent = this._handleModelEvent.bind(this);
     this._handleFilterTypeChange = this._handleFilterTypeChange.bind(this);
 
+    this._eventsModel.addObserver(this._handleModelEvent);
     this._filterModel.addObserver(this._handleModelEvent);
   }
 
@@ -38,6 +41,7 @@ export default class Filter {
     this.init();
   }
 
+
   _handleFilterTypeChange(filterType) {
     if (this._currentFilter === filterType) {
       return;
@@ -47,20 +51,8 @@ export default class Filter {
   }
 
   _getFilters() {
+    const events = this._eventsModel.getEvents();
 
-    return [
-      {
-        type: FilterType.EVERYTHING,
-        name: `Everything`
-      },
-      {
-        type: FilterType.FUTURE,
-        name: `Future`
-      },
-      {
-        type: FilterType.PAST,
-        name: `Past`
-      }
-    ];
+    return Object.entries(filter).map(([key, value]) => ({name: key, isDisabled: !value(events).length}));
   }
 }
