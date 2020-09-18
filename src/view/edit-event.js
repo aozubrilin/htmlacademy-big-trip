@@ -241,7 +241,7 @@ export default class EditEvent extends SmartView {
     this._destinationsModel = destinationsModel;
     this._isNewEvent = isNewEvent;
     this._datepickers = null;
-    this._submitForm = this._submitForm.bind(this);
+    this._formSubmitHandle = this._formSubmitHandle.bind(this);
     this._formDeleteClickHandler = this._formDeleteClickHandler.bind(this);
     this._favoriteClickHandler = this._favoriteClickHandler.bind(this);
     this._destinationChangeHandler = this._destinationChangeHandler.bind(this);
@@ -406,14 +406,14 @@ export default class EditEvent extends SmartView {
     }
   }
 
-  _submitForm(evt) {
+  _formSubmitHandle(evt) {
     evt.preventDefault();
     this._callback._submitForm(EditEvent.parseDataToEvent(this._data));
   }
 
   setSubmitFormHandler(callback) {
     this._callback._submitForm = callback;
-    this.getElement().addEventListener(`submit`, this._submitForm);
+    this.getElement().addEventListener(`submit`, this._formSubmitHandle);
   }
 
   _formDeleteClickHandler(evt) {
