@@ -7,8 +7,7 @@
 Стек используемых технологий:
 * JavaScript
 * OOP
-* JSONP
-* AJAX
+* Service Worker
 * Webpack
 
 ### Основные команды для работы:
